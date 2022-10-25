@@ -16,7 +16,10 @@ export default function App() {
     return (
       <AuthProvider>
         <React.Fragment>
-          <StatusBar style={Platform.OS === "ios" ? "dark" : "auto"} />
+          <StatusBar
+            style={Platform.OS === "ios" ? "dark" : "auto"}
+            backgroundColor="#eee"
+          />
           <Navigation />
         </React.Fragment>
       </AuthProvider>

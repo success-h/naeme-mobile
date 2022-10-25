@@ -19,7 +19,7 @@ export type AuthRootStackParamList = {
 
 export type HomeRootStackParamList = {
   Home: undefined;
-  EditEventModal: undefined;
+  EditEventModal: DataProps;
   PaymentModal: undefined;
   Modal: undefined;
   Detail: DataProps;

@@ -36,7 +36,7 @@ export default function EventDetail({ data }: DataProps) {
         resizeMode="cover"
       />
       <TouchableOpacity
-        onPress={() => navigation.navigate("EditEventModal")}
+        onPress={() => navigation.navigate("EditEventModal", { data })}
         className="bg-emerald-300 h-10 w-10 absolute rounded-full top-[280px] right-5 items-center p-2"
       >
         <Entypo name="edit" size={24} color="black" />
@@ -93,26 +93,27 @@ export default function EventDetail({ data }: DataProps) {
             )}
           </View>
         </View>
-      </View>
-      <View className="px-4 mt-4">
-        <Text className="font-semibold mt-3 text-lg">Description:</Text>
-        <Text className="text-gray-700 leading-5">
-          {text} {!readMore && "..."}
-          <Text
-            onPress={() => {
-              if (!readMore) {
-                setText(data.description);
-                setReadMore(true);
-              } else {
-                setText(data.description.slice(0, 300));
-                setReadMore(false);
-              }
-            }}
-            className="font-bold text-black"
-          >
-            {readMore ? "Show Less" : "Read More"}
+
+        <View className="mt-4">
+          <Text className="font-semibold mt-3 text-lg">Description:</Text>
+          <Text className="text-gray-700 leading-5">
+            {text} {!readMore && "..."}
+            <Text
+              onPress={() => {
+                if (!readMore) {
+                  setText(data.description);
+                  setReadMore(true);
+                } else {
+                  setText(data.description.slice(0, 300));
+                  setReadMore(false);
+                }
+              }}
+              className="font-bold text-black"
+            >
+              {readMore ? "Show Less" : "Read More"}
+            </Text>
           </Text>
-        </Text>
+        </View>
       </View>
 
       <View className="h-96 bg-white mt-7 mb-14">

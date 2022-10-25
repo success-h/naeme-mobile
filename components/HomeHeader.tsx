@@ -27,7 +27,7 @@ export default function HomeHeader() {
     <BlurView intensity={50}>
       <View
         className={`${
-          Platform.OS === "ios" ? "pt-14" : "pt-10 bg-sky-50"
+          Platform.OS === "ios" ? "pt-14" : "pt-10 bg-slate-100"
         } pb-2 px-2 top-0 fixed`}
       >
         <View className="flex-row justify-between items-start">
@@ -46,7 +46,7 @@ export default function HomeHeader() {
               {user?.username}👋
             </Text>
           </View>
-          <View>
+          <View className="bg-white px-1 rounded-full">
             <Image
               resizeMode="contain"
               source={{

@@ -1,21 +1,34 @@
-import { View, Text, Pressable, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  Pressable,
+  Image,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
+import React, { ReactElement, ReactNode } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { HomeRootStackParamList, HomeStackScreenProps } from "../../types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import moment from "moment";
+import { Loader } from "../Loader";
 
 export type NavigationProps = NativeStackNavigationProp<
   HomeRootStackParamList,
   "Detail"
 >;
 
-export default function EventCard({ data }: DataProps) {
+export default function EventCard({ data }: DataProps): ReactElement {
   const navigation = useNavigation<NavigationProps>();
   const date = moment(data.start_date).format("MMMM D, YYYY");
 
   return (
-    <View className="bg-white mt-4 mx-3 rounded-2xl">
+    <TouchableOpacity
+      touchSoundDisabled={true}
+      activeOpacity={0.6}
+      onPress={() => navigation.navigate("Detail", { data })}
+      className="bg-white my-7 mx-3 rounded-2xl shadow-md shadow-gray-200"
+    >
       <View className="mb-3">
         <View className="w-full h-[250px] ">
           <Image
@@ -62,6 +75,7 @@ export default function EventCard({ data }: DataProps) {
                 ${data.lowest_price} - ${data.highest_price}
               </Text>
             )}
+
             <TouchableOpacity
               onPress={() => navigation.navigate("Detail", { data })}
               className="self-end py-3 px-5 rounded-2xl text-sm font-bold bg-black"
@@ -71,6 +85,6 @@ export default function EventCard({ data }: DataProps) {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
