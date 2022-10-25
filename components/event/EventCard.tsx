@@ -11,14 +11,13 @@ import { useNavigation } from "@react-navigation/native";
 import { HomeRootStackParamList, HomeStackScreenProps } from "../../types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import moment from "moment";
-import { Loader } from "../Loader";
 
 export type NavigationProps = NativeStackNavigationProp<
   HomeRootStackParamList,
   "Detail"
 >;
 
-export default function EventCard({ data }: DataProps): ReactElement {
+export default function EventCard({ data }: { data: EventProps }) {
   const navigation = useNavigation<NavigationProps>();
   const date = moment(data.start_date).format("MMMM D, YYYY");
 

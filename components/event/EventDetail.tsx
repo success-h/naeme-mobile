@@ -13,7 +13,6 @@ export type NavigationProps = NativeStackNavigationProp<
 >;
 
 export default function EventDetail({ data }: DataProps) {
-  // hooks calls
   const navigation = useNavigation<NavigationProps>();
 
   // date functions

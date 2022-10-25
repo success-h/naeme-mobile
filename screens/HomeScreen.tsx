@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
   FlatList,
@@ -18,6 +18,8 @@ const HomeScreen = () => {
   const [eventData, setEventData] = useState<EventDataTypes>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [input, setInput] = useState("");
+  const ref = useRef<React.MutableRefObject<string>>();
 
   const fetchData = useCallback(async () => {
     (async () => {
@@ -26,7 +28,9 @@ const HomeScreen = () => {
         `https://naeme-api.herokuapp.com/api/events/?page=${currentPage}`
       );
       const data = await response.json();
-      setEventData((currentState) => [...currentState, ...data?.results]);
+      if (eventData.length <= data.count) {
+        setEventData((currentState) => [...currentState, ...data?.results]);
+      }
       setIsLoading(false);
     })();
   }, [currentPage]);
@@ -34,8 +38,23 @@ const HomeScreen = () => {
   useEffect(() => {
     fetchData();
   }, [currentPage]);
+
   const loadMoreItem = () => {
     setCurrentPage(currentPage + 1);
+  };
+
+  const handleSearch = (inputValue: string) => {
+    if (!inputValue.length) return setEventData(eventData);
+    // https://naeme-api.herokuapp.com/api/events/?title=whi
+    (async () => {})();
+    const filteredData = eventData.filter((item) =>
+      item.title.toLowerCase().includes(inputValue.toLowerCase())
+    );
+    if (filteredData.length) {
+      setEventData(filteredData);
+    } else {
+      setEventData(eventData);
+    }
   };
 
   return (
@@ -48,7 +67,9 @@ const HomeScreen = () => {
           }}
           keyExtractor={(item) => item?.id}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={() => <HomeHeader />}
+          ListHeaderComponent={() => (
+            <HomeHeader input={input} onSearch={handleSearch} />
+          )}
           ListFooterComponent={() => <Loader isLoading={isLoading} />}
           stickyHeaderIndices={Platform.OS === "ios" ? [0] : []}
           onEndReached={loadMoreItem}

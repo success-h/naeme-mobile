@@ -7,12 +7,12 @@ import {
   TextInput,
   Platform,
 } from "react-native";
-import React from "react";
+import React, { ReactNode, useRef } from "react";
 import { useAuthContext } from "../Providers/AuthProvider";
 import { BlurView } from "expo-blur";
 
-interface HomeHeader {
-  onSearch: (inputValue: string) => void;
+interface HomeHeaderTypes {
+  handleSearch: (inputValue: string) => ReactNode;
 }
 import { AntDesign } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
@@ -20,7 +20,13 @@ import { HomeRootStackParamList } from "../types";
 
 type NavProps = NavigationProp<HomeRootStackParamList, "User">;
 
-export default function HomeHeader() {
+export default function HomeHeader({
+  onSearch,
+  input,
+}: {
+  onSearch: (inputValue: string) => void;
+  input: string;
+}) {
   const navigation = useNavigation<NavProps>();
   const { user } = useAuthContext();
   return (
@@ -71,6 +77,8 @@ export default function HomeHeader() {
             placeholder="Search NFTs"
             placeholderTextColor="white"
             className="text-gray--800 h-11 w-full bg-opacity-25"
+            onChangeText={(text) => onSearch(text)}
+            value={input}
           />
         </View>
       </View>
