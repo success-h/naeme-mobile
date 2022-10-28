@@ -2,42 +2,44 @@ import {
   View,
   Text,
   Image,
-  Pressable,
   TouchableOpacity,
   TextInput,
   Platform,
-} from "react-native";
-import React, { ReactNode, useCallback, useState } from "react";
-import { useAuthContext } from "../Providers/AuthProvider";
-import { BlurView } from "expo-blur";
+} from 'react-native';
+import React, { ReactNode, useCallback, useState } from 'react';
+import { useAuthContext } from '../Providers/AuthProvider';
+import { BlurView } from 'expo-blur';
 
 interface HomeHeaderTypes {
   handleSearch: (inputValue: string) => ReactNode;
 }
-import { AntDesign, Feather } from "@expo/vector-icons";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { HomeRootStackParamList } from "../types";
-import { useEventContext } from "../Providers/EventProvider";
-import { Controller, useForm, useFormState } from "react-hook-form";
+import { AntDesign, Feather } from '@expo/vector-icons';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { HomeRootStackParamList } from '../types';
+import { useEventContext } from '../Providers/EventProvider';
+import { Controller, useForm } from 'react-hook-form';
 
-type NavProps = NavigationProp<HomeRootStackParamList, "User">;
+type NavProps = NavigationProp<HomeRootStackParamList, 'User'>;
 
 export default function HomeHeader() {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const { loading, setLoading, setEventData, eventData } = useEventContext();
-
+  const { loading, setLoading, setEventData, fetchData, setSearching } =
+    useEventContext();
   const navigation = useNavigation<NavProps>();
   const { user } = useAuthContext();
+  const {
+    control,
+    formState: { errors, isDirty },
+  } = useForm({
+    defaultValues: {
+      search: '',
+    },
+  });
 
-  const searchData = async (input: string) => {
+  const searchData = async (text: string) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `https://naeme-api.herokuapp.com/api/events/?title=${input}`
+        `https://naeme-api.herokuapp.com/api/events/?title=${text}`
       );
       const data = await response.json();
       setLoading(false);
@@ -49,7 +51,8 @@ export default function HomeHeader() {
   };
 
   const searchFunction = useCallback(async (text: string) => {
-    if (text.length > 0) {
+    console.log('-----------search fired------------');
+    if (text) {
       const data = await searchData(text);
       if (data) {
         setEventData(data);
@@ -58,33 +61,33 @@ export default function HomeHeader() {
   }, []);
 
   return (
-    <BlurView intensity={Platform.OS === "ios" ? 30 : 0}>
+    <BlurView intensity={Platform.OS === 'ios' ? 30 : 0}>
       <View
         className={`${
-          Platform.OS === "ios" ? "pt-14" : "pt-10"
+          Platform.OS === 'ios' ? 'pt-14' : 'pt-10'
         } pb-2 px-2 top-0 fixed `}
       >
         <View className="flex-row justify-between items-start">
           <View className="items-start gap-2">
             <TouchableOpacity
-              onPress={() => navigation.navigate("User")}
+              onPress={() => navigation.navigate('User')}
               className="w-[45px] h-[45px] rounded-full border-2 border-rose-600"
             >
               <Image
                 source={{ uri: user?.image }}
-                className="w-full h-full "
+                className="w-full h-full"
                 resizeMode="contain"
               />
             </TouchableOpacity>
-            <Text className="text-black text-xs font-bold">
+            <Text className="text-xs font-bold  text-white">
               {user?.username}👋
             </Text>
           </View>
-          <View className="bg-white px-1 rounded-full">
+          <View className=" px-1 rounded-full">
             <Image
               resizeMode="contain"
               source={{
-                uri: "https://res.cloudinary.com/dp3a4be7p/image/upload/v1666534504/logo_nb3kab.png",
+                uri: 'https://res.cloudinary.com/dp3a4be7p/image/upload/v1666534504/logo_nb3kab.png',
               }}
               className="w-[100px] h-[30px]"
             />
@@ -92,7 +95,7 @@ export default function HomeHeader() {
         </View>
         <View className="mt-3 flex-row items-end justify-between">
           <View className="mt-2">
-            <Text className="text-black text-2xl font-semibold">
+            <Text className="text-sky-400 text-2xl font-semibold">
               Search Events
             </Text>
           </View>
@@ -101,49 +104,40 @@ export default function HomeHeader() {
           <Controller
             control={control}
             rules={{
-              maxLength: 100,
+              required: true,
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
                 className="text-gray-800 h-11 flex-1 bg-opacity-25"
                 onChangeText={(text) => onChange(text)}
                 value={value}
-                onSubmitEditing={(text) => {
-                  setLoading(true);
-                  searchFunction(text.nativeEvent.text);
-                }}
                 onBlur={onBlur}
+                onEndEditing={() => {
+                  setSearching(true);
+                  searchFunction(value);
+                }}
+                placeholder="Search events by name"
                 underlineColorAndroid="transparent"
-                keyboardType="web-search"
-                blurOnSubmit={true}
+                placeholderTextColor={'#29292c'}
               />
             )}
             name="search"
           />
-
           <TouchableOpacity className="bg-gry-300 p-1 rounded-full">
-            <Feather name="search" size={19} color="black" />
-          </TouchableOpacity>
-
-          {/* <View className="">
-            {search ? (
+            {isDirty ? (
               <AntDesign
-                onPress={() => {}}
+                onPress={() => {
+                  fetchData();
+                  setSearching(false);
+                }}
                 name="closecircleo"
                 size={19}
                 color="gray"
               />
             ) : (
-              <Feather
-                onPress={() => {
-                  reloadData();
-                }}
-                name="search"
-                size={19}
-                color="gray"
-              />
-            )} */}
-          {/* </View> */}
+              <Feather name="search" size={19} color="black" />
+            )}
+          </TouchableOpacity>
         </View>
       </View>
     </BlurView>

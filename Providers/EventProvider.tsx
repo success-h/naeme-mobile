@@ -6,7 +6,7 @@ import React, {
   useContext,
   useEffect,
   useState,
-} from "react";
+} from 'react';
 
 interface EventCartContextType {
   loading: boolean;
@@ -19,6 +19,7 @@ interface EventCartContextType {
   loadMoreItem: () => void;
   handleRefresh: () => void;
   refresh: boolean;
+  setSearching: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const EventContext = createContext({} as EventCartContextType);
@@ -32,15 +33,18 @@ export default function EventProvider({ children }: { children: ReactNode }) {
   const [nextPage, setNextPage] = useState<string | null>(null);
   const [eventData, setEventData] = useState<EventDataTypes>([]);
   const [refresh, setRefresh] = useState(true);
+  const [searching, setSearching] = useState<boolean>(false);
 
   const loadMoreItem = () => {
-    if (eventData.length > 1 && nextPage) loadMore();
+    if (searching === false) {
+      if (eventData.length > 1 && nextPage !== null) loadMore();
+    }
   };
 
   const loadMore = async () => {
     try {
       setLoading(true);
-      console.log("currentPage: ", nextPage);
+      console.log('currentPage: ', nextPage);
       if (nextPage) {
         const response = await fetch(`${nextPage}`);
         const data = await response.json();
@@ -50,12 +54,8 @@ export default function EventProvider({ children }: { children: ReactNode }) {
         setLoading(false);
       }
     } catch (e) {
-      console.log("LoadMore Error: ", e);
+      console.log('LoadMore Error: ', e);
     }
-  };
-
-  const wait = (timeout: number) => {
-    return new Promise((resolve) => setTimeout(resolve, timeout));
   };
 
   const handleRefresh = () => {
@@ -66,14 +66,15 @@ export default function EventProvider({ children }: { children: ReactNode }) {
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
+      setSearching(false);
       const response = await fetch(
         `https://naeme-api.herokuapp.com/api/events`
       );
       const data = await response.json();
-      console.log("data: ", data);
+      console.log('data: ', data);
       setEventData(data?.results);
       setNextPage(data?.next);
-      console.log("nextPage:", nextPage);
+      console.log('nextPage:', nextPage);
       setRefresh(false);
       setLoading(false);
     } catch (e) {}
@@ -96,6 +97,7 @@ export default function EventProvider({ children }: { children: ReactNode }) {
         loadMoreItem,
         refresh,
         handleRefresh,
+        setSearching,
       }}
     >
       {children}
