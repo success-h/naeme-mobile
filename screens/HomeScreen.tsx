@@ -1,86 +1,56 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Animated,
+  ActivityIndicator,
   FlatList,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
   Platform,
-  Text,
+  RefreshControl,
   View,
 } from "react-native";
 import EventCard from "../components/event/EventCard";
 import HomeHeader from "../components/HomeHeader";
-import { Loader } from "../components/Loader";
-
-type Ianimation = NativeSyntheticEvent<NativeScrollEvent>;
+import { Loader, LoaderEvent } from "../components/Loader";
+import { AntDesign } from "@expo/vector-icons";
+import { useEventContext } from "../Providers/EventProvider";
+import NotFound from "../components/Empty";
 
 const HomeScreen = () => {
-  const [eventData, setEventData] = useState<EventDataTypes>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [input, setInput] = useState("");
-  const ref = useRef<React.MutableRefObject<string>>();
-
-  const fetchData = useCallback(async () => {
-    (async () => {
-      setIsLoading(true);
-      const response = await fetch(
-        `https://naeme-api.herokuapp.com/api/events/?page=${currentPage}`
-      );
-      const data = await response.json();
-      if (eventData.length <= data.count) {
-        setEventData((currentState) => [...currentState, ...data?.results]);
-      }
-      setIsLoading(false);
-    })();
-  }, [currentPage]);
-
-  useEffect(() => {
-    fetchData();
-  }, [currentPage]);
-
-  const loadMoreItem = () => {
-    setCurrentPage(currentPage + 1);
-  };
-
-  const handleSearch = (inputValue: string) => {
-    if (!inputValue.length) return setEventData(eventData);
-    // https://naeme-api.herokuapp.com/api/events/?title=whi
-    (async () => {})();
-    const filteredData = eventData.filter((item) =>
-      item.title.toLowerCase().includes(inputValue.toLowerCase())
-    );
-    if (filteredData.length) {
-      setEventData(filteredData);
-    } else {
-      setEventData(eventData);
-    }
-  };
+  const { eventData, loading, loadMoreItem, refresh, handleRefresh } =
+    useEventContext();
 
   return (
-    <View className="flex-1">
-      <View>
+    <View className="flex-1 backdrop-blur-md">
+      <View className="">
         <FlatList
           data={eventData}
           renderItem={({ item }) => {
             return <EventCard data={item} />;
           }}
-          keyExtractor={(item) => item?.id}
+          keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={() => (
-            <HomeHeader input={input} onSearch={handleSearch} />
+          ListHeaderComponent={() => <HomeHeader />}
+          ListFooterComponent={<Loader isLoading={loading} />}
+          ListEmptyComponent={() => (
+            <View>{!loading && <NotFound title="Event" />}</View>
           )}
-          ListFooterComponent={() => <Loader isLoading={isLoading} />}
           stickyHeaderIndices={Platform.OS === "ios" ? [0] : []}
           onEndReached={loadMoreItem}
           onEndReachedThreshold={0}
+          refreshControl={
+            <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
+          }
         />
       </View>
       <View className="absolute top-0 bottom-0 right-0 left-0 -z-10">
-        <View className="bg-slate-100 h-[300px]" />
+        <View
+          className={`${
+            Platform.OS === "ios" ? "bg-[#080a1a]" : "bg-slate-900"
+          } h-[300px]`}
+        />
         <View className="flex-1 bg-slate-200" />
       </View>
     </View>
   );
 };
 export default HomeScreen;
+
+// https://naeme-api.herokuapp.com/api/events/?page=1&title=holla

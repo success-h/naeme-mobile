@@ -16,7 +16,7 @@ export default function DetailScreen({
 }: HomeStackScreenProps<"Detail">) {
   return (
     <View className="flex-1 bg-slate-200">
-      <ScrollView className="flex-1">
+      <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
         <EventDetail data={route?.params.data} />
       </ScrollView>
 

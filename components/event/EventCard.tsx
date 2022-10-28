@@ -55,7 +55,7 @@ export default function EventCard({ data }: { data: EventProps }) {
             <Text className="font-bold text-lg">{data.title}</Text>
           </View>
           <Text className="mt-2 mb-3 text-xs  text-gray-700">
-            {data.description.slice(0, 200)}..{" "}
+            {data?.description.slice(0, 200)}..{" "}
             <Text className="font-bold">see more</Text>
           </Text>
           <View className="w-full">

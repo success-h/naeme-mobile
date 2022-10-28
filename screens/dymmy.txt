@@ -1,0 +1,29 @@
+chData = async (input: string) => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `https://naeme-api.herokuapp.com/api/events/?title=${input}`
+      );
+      const data = await response.json();
+      console.log(data);
+      if (data?.results.length <= data.count) {
+        setLoading(false);
+        return data?.results;
+      }
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+    }
+  };
+
+  const searchFunction = async (text: string) => {
+    console.log(text);
+
+    if (text.length > 0) {
+      const data = await searchData(text);
+      if (data) {
+        console.log("data:", data);
+        setEventData(data);
+      }
+    }
+  };

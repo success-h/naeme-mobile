@@ -38,11 +38,11 @@ export type AuthStackScreenProps<Screen extends keyof AuthRootStackParamList> =
 //   NativeStackNavigationProp<AuthRootStackParamList, "SignIn">
 // >;
 
-// export type NavigationProps<T extends keyof HomeRootStackParamList> =
-//   CompositeNavigationProp<
-//     NativeStackNavigationProp<HomeRootStackParamList, T>,
-//     NavigationProp<HomeRootStackParamList, T>
-//   >;
+export type NavigationProps<T extends keyof HomeRootStackParamList> = {
+  navigation: NativeStackNavigationProp<HomeRootStackParamList, T>;
+  route: RouteProp<HomeRootStackParamList, T>;
+};
+// CompositeNavigationProp<>;
 
 export type ModalScreenProps<T extends keyof HomeRootStackParamList> = {
   navigation: NativeStackNavigationProp<HomeRootStackParamList, T>;

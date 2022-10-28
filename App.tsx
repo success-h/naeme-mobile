@@ -5,6 +5,7 @@ import { Platform, Text, useColorScheme, View } from "react-native";
 import useCachedResources from "./hooks/useCachedResources";
 import Navigation from "./navigation/navigator";
 import { AuthProvider } from "./Providers/AuthProvider";
+import EventProvider from "./Providers/EventProvider";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -15,13 +16,15 @@ export default function App() {
   } else {
     return (
       <AuthProvider>
-        <React.Fragment>
-          <StatusBar
-            style={Platform.OS === "ios" ? "dark" : "auto"}
-            backgroundColor="#eee"
-          />
-          <Navigation />
-        </React.Fragment>
+        <EventProvider>
+          <React.Fragment>
+            <StatusBar
+              style={Platform.OS === "ios" ? "dark" : "auto"}
+              backgroundColor="#eee"
+            />
+            <Navigation />
+          </React.Fragment>
+        </EventProvider>
       </AuthProvider>
     );
   }
