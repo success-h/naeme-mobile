@@ -1,12 +1,17 @@
 import { View, Text, Image } from 'react-native';
 import React from 'react';
+import { useEventContext } from '../Providers/EventProvider';
+import { Loader } from './Loader';
 
 export default function NotFound({ title }: { title: string }) {
+  const { loading } = useEventContext();
+  console.log('LOading:', loading);
+  if (loading) return <Loader isLoading={loading} />;
   return (
     <View className="bg-white min-h-[700px]  items-center justify-center">
       <View></View>
       <Text className="w-3/5 text-2xl text-gray-600 text-center">
-        Not {title} match in our database
+        No {title} match in our database
       </Text>
       <Text className="w-3/5  text-xl font-bold text-center">
         Please refresh screen

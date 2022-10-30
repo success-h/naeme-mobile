@@ -4,11 +4,12 @@ import {
   FlatList,
   Platform,
   RefreshControl,
+  Text,
   View,
 } from 'react-native';
 import EventCard from '../components/event/EventCard';
 import HomeHeader from '../components/HomeHeader';
-import { Loader, LoaderEvent } from '../components/Loader';
+import { Loader } from '../components/Loader';
 import { AntDesign } from '@expo/vector-icons';
 import { useEventContext } from '../Providers/EventProvider';
 import NotFound from '../components/Empty';
@@ -30,9 +31,11 @@ const HomeScreen = () => {
           ListHeaderComponent={() => <HomeHeader />}
           ListFooterComponent={<Loader isLoading={loading} />}
           ListEmptyComponent={() => (
-            <View>{!loading && <NotFound title="Event" />}</View>
+            <View>
+              {!loading && eventData.length === 0 && <NotFound title="event" />}
+            </View>
           )}
-          stickyHeaderIndices={Platform.OS === 'ios' ? [0] : []}
+          stickyHeaderIndices={Platform.OS === 'ios' ? [0] : [0]}
           onEndReached={loadMoreItem}
           onEndReachedThreshold={0}
           refreshControl={
@@ -41,11 +44,7 @@ const HomeScreen = () => {
         />
       </View>
       <View className="absolute top-0 bottom-0 right-0 left-0 -z-10">
-        <View
-          className={`${
-            Platform.OS === 'ios' ? 'bg-[#080a1a]' : 'bg-slate-900'
-          } h-[300px]`}
-        />
+        <View className={`h-[300px]`} />
         <View className="flex-1 bg-slate-200" />
       </View>
     </View>

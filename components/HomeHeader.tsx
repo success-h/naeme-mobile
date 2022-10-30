@@ -22,22 +22,30 @@ import { Controller, useForm } from 'react-hook-form';
 type NavProps = NavigationProp<HomeRootStackParamList, 'User'>;
 
 export default function HomeHeader() {
-  const { loading, setLoading, setEventData, fetchData, setSearching } =
-    useEventContext();
-  const navigation = useNavigation<NavProps>();
+  const {
+    setLoading,
+    setEventData,
+    fetchData,
+    textState,
+    setSearching,
+    setTextState,
+  } = useEventContext();
   const { user } = useAuthContext();
+
+  const navigation = useNavigation<NavProps>();
+
   const {
     control,
     formState: { errors, isDirty },
   } = useForm({
     defaultValues: {
-      search: '',
+      search: undefined,
     },
   });
 
   const searchData = async (text: string) => {
+    setLoading(true);
     try {
-      setLoading(true);
       const response = await fetch(
         `https://naeme-api.herokuapp.com/api/events/?title=${text}`
       );
@@ -51,7 +59,6 @@ export default function HomeHeader() {
   };
 
   const searchFunction = useCallback(async (text: string) => {
-    console.log('-----------search fired------------');
     if (text) {
       const data = await searchData(text);
       if (data) {
@@ -61,11 +68,11 @@ export default function HomeHeader() {
   }, []);
 
   return (
-    <BlurView intensity={Platform.OS === 'ios' ? 30 : 0}>
+    <BlurView intensity={Platform.OS === 'ios' ? 50 : 0}>
       <View
         className={`${
-          Platform.OS === 'ios' ? 'pt-14' : 'pt-10'
-        } pb-2 px-2 top-0 fixed `}
+          Platform.OS === 'ios' ? 'pt-14' : 'pt-10 bg-white'
+        } pb-2 px-4 top-0 fixed `}
       >
         <View className="flex-row justify-between items-start">
           <View className="items-start gap-2">
@@ -79,7 +86,7 @@ export default function HomeHeader() {
                 resizeMode="contain"
               />
             </TouchableOpacity>
-            <Text className="text-xs font-bold  text-white">
+            <Text className="text-xs font-bold mb-1 text-gray-800">
               {user?.username}👋
             </Text>
           </View>
@@ -93,13 +100,7 @@ export default function HomeHeader() {
             />
           </View>
         </View>
-        <View className="mt-3 flex-row items-end justify-between">
-          <View className="mt-2">
-            <Text className="text-sky-400 text-2xl font-semibold">
-              Search Events
-            </Text>
-          </View>
-        </View>
+
         <View className="mt-1 rounded-lg justify-between flex-row items-center bg-[#fff] border border-gray-300 px-3">
           <Controller
             control={control}
@@ -109,25 +110,29 @@ export default function HomeHeader() {
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
                 className="text-gray-800 h-11 flex-1 bg-opacity-25"
-                onChangeText={(text) => onChange(text)}
-                value={value}
-                onBlur={onBlur}
-                onEndEditing={() => {
-                  setSearching(true);
-                  searchFunction(value);
+                onChangeText={(text) => {
+                  onChange(text);
                 }}
+                value={value}
+                onSubmitEditing={(e) => {
+                  setSearching(true);
+                  setTextState(e.nativeEvent.text);
+                  searchFunction(e.nativeEvent.text);
+                }}
+                defaultValue={textState}
                 placeholder="Search events by name"
                 underlineColorAndroid="transparent"
-                placeholderTextColor={'#29292c'}
+                placeholderTextColor={'#4a4a4b'}
               />
             )}
             name="search"
           />
           <TouchableOpacity className="bg-gry-300 p-1 rounded-full">
-            {isDirty ? (
+            {textState ? (
               <AntDesign
                 onPress={() => {
                   fetchData();
+                  setTextState('');
                   setSearching(false);
                 }}
                 name="closecircleo"

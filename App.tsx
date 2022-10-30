@@ -1,15 +1,14 @@
-import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { Platform, Text, useColorScheme, View } from "react-native";
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { Platform, Text, useColorScheme, View } from 'react-native';
 
-import useCachedResources from "./hooks/useCachedResources";
-import Navigation from "./navigation/navigator";
-import { AuthProvider } from "./Providers/AuthProvider";
-import EventProvider from "./Providers/EventProvider";
+import useCachedResources from './hooks/useCachedResources';
+import Navigation from './navigation/navigator';
+import { AuthProvider } from './Providers/AuthProvider';
+import EventProvider from './Providers/EventProvider';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
 
   if (!isLoadingComplete) {
     return null;
@@ -19,8 +18,8 @@ export default function App() {
         <EventProvider>
           <React.Fragment>
             <StatusBar
-              style={Platform.OS === "ios" ? "dark" : "auto"}
-              backgroundColor="#eee"
+              style={Platform.OS === 'ios' ? 'dark' : 'light'}
+              backgroundColor="#000"
             />
             <Navigation />
           </React.Fragment>

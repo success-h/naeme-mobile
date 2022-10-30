@@ -20,6 +20,8 @@ interface EventCartContextType {
   handleRefresh: () => void;
   refresh: boolean;
   setSearching: React.Dispatch<React.SetStateAction<boolean>>;
+  setTextState: React.Dispatch<React.SetStateAction<string>>;
+  textState: string;
 }
 
 const EventContext = createContext({} as EventCartContextType);
@@ -29,43 +31,55 @@ export function useEventContext() {
 }
 
 export default function EventProvider({ children }: { children: ReactNode }) {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [nextPage, setNextPage] = useState<string | null>(null);
   const [eventData, setEventData] = useState<EventDataTypes>([]);
   const [refresh, setRefresh] = useState(true);
   const [searching, setSearching] = useState<boolean>(false);
+  const [textState, setTextState] = useState('');
+  const [prevPage, setPreviousPage] = useState<string | null>(null);
 
   const loadMoreItem = () => {
+    setLoading(true);
     if (searching === false) {
-      if (eventData.length > 1 && nextPage !== null) loadMore();
+      if (nextPage !== null) {
+        loadMore();
+      } else {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
     }
   };
 
   const loadMore = async () => {
     try {
-      setLoading(true);
-      console.log('currentPage: ', nextPage);
-      if (nextPage) {
+      if (nextPage !== prevPage) {
         const response = await fetch(`${nextPage}`);
         const data = await response.json();
+        console.log('Data:', data);
         if (eventData.length < data?.count) {
           setEventData([...eventData, ...data?.results]);
         }
+        setPreviousPage(data.previous);
+        setNextPage(data?.next);
         setLoading(false);
       }
     } catch (e) {
+      setLoading(false);
       console.log('LoadMore Error: ', e);
     }
   };
 
   const handleRefresh = () => {
-    setEventData([]);
+    setTextState('');
+    setLoading(true);
+    setTextState('');
     fetchData();
   };
 
   const fetchData = useCallback(async () => {
     try {
-      setLoading(true);
       setSearching(false);
       const response = await fetch(
         `https://naeme-api.herokuapp.com/api/events`
@@ -74,13 +88,16 @@ export default function EventProvider({ children }: { children: ReactNode }) {
       console.log('data: ', data);
       setEventData(data?.results);
       setNextPage(data?.next);
-      console.log('nextPage:', nextPage);
+      setPreviousPage(data.previous);
       setRefresh(false);
+    } catch (e) {
       setLoading(false);
-    } catch (e) {}
+      console.log('error- fetchData:', e);
+    }
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     fetchData();
   }, []);
 
@@ -98,6 +115,8 @@ export default function EventProvider({ children }: { children: ReactNode }) {
         refresh,
         handleRefresh,
         setSearching,
+        setTextState,
+        textState,
       }}
     >
       {children}
