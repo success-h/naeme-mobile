@@ -1,12 +1,11 @@
-import {
-  createContext,
-  ReactElement,
-  ReactNode,
-  useContext,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useState } from 'react';
 
-type User = { username: string; email: string; image: string } | null;
+interface User {
+  username: SringOrNull;
+  email: SringOrNull;
+  image: string | undefined;
+}
+
 interface AuthProviderProps {
   user: User;
   login: () => void;
@@ -20,30 +19,34 @@ export function useAuthContext() {
   return useContext(AuthContext);
 }
 
-export const AuthProvider = ({ children }: { children: ReactElement }) => {
-  const [user, setUser] = useState<User | null>({
-    email: "succes@test.com",
-    username: "Success Hycenth",
-    image:
-      "https://res.cloudinary.com/dp3a4be7p/image/upload/v1666535340/person01_njmygc.png",
-  });
+const defaultUser = {
+  email: null,
+  username: null,
+  image: undefined,
+};
+
+const dummyUser: User = {
+  email: 'succes@test.com',
+  username: 'Success Hycenth',
+  image:
+    'https://res.cloudinary.com/dp3a4be7p/image/upload/v1667144942/1b8a251475e711e3ddcc68ff6511ea34_skv5b6.jpg',
+};
+
+interface Props {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<Props> = ({ children }) => {
+  const [user, setUser] = useState<User>(defaultUser);
   const [loading, setLoading] = useState(true);
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        login: () => {
-          const fakeUser = {
-            username: "Bobo",
-            email: "succes@test.com",
-            image:
-              "https://res.cloudinary.com/dp3a4be7p/image/upload/v1666534504/logo_nb3kab.png",
-          };
-          setUser(fakeUser);
-        },
+        login: () => setUser(dummyUser),
         logout: () => {
-          setUser(null);
+          setUser(defaultUser);
         },
         loading,
         setLoading,

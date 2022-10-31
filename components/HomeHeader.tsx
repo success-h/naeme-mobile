@@ -9,10 +9,8 @@ import {
 import React, { ReactNode, useCallback, useState } from 'react';
 import { useAuthContext } from '../Providers/AuthProvider';
 import { BlurView } from 'expo-blur';
+import { EvilIcons } from '@expo/vector-icons';
 
-interface HomeHeaderTypes {
-  handleSearch: (inputValue: string) => ReactNode;
-}
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeRootStackParamList } from '../types';
@@ -29,6 +27,7 @@ export default function HomeHeader() {
     textState,
     setSearching,
     setTextState,
+    location,
   } = useEventContext();
   const { user } = useAuthContext();
 
@@ -68,81 +67,38 @@ export default function HomeHeader() {
   }, []);
 
   return (
-    <BlurView intensity={Platform.OS === 'ios' ? 50 : 0}>
+    <BlurView tint="light" intensity={Platform.OS === 'ios' ? 40 : 0}>
       <View
         className={`${
           Platform.OS === 'ios' ? 'pt-14' : 'pt-10 bg-white'
-        } pb-2 px-4 top-0 fixed `}
+        } pb-2 px-4 top-0 fixed shadow-2xl mt-2`}
       >
-        <View className="flex-row justify-between items-start">
-          <View className="items-start gap-2">
+        <View className="flex-row justify-between items-start mb-2">
+          <View>
+            <Text className="text-md font-semibold mb-1 text-s text-gray-800">
+              {user?.username}
+            </Text>
+            <View className="flex-row items-center mb-3">
+              <EvilIcons name="location" size={18} color="#898989" />
+              {location.city && (
+                <Text className="ml-2 text-[#898989]">
+                  {location.city}, {location.country}
+                </Text>
+              )}
+            </View>
+          </View>
+          <View className="gap-2">
             <TouchableOpacity
               onPress={() => navigation.navigate('User')}
-              className="w-[45px] h-[45px] rounded-full border-2 border-rose-600"
+              className="w-[50px] h-[50px]"
             >
               <Image
                 source={{ uri: user?.image }}
-                className="w-full h-full"
+                className="w-full h-full rounded-full"
                 resizeMode="contain"
               />
             </TouchableOpacity>
-            <Text className="text-xs font-bold mb-1 text-gray-800">
-              {user?.username}👋
-            </Text>
           </View>
-          <View className=" px-1 rounded-full">
-            <Image
-              resizeMode="contain"
-              source={{
-                uri: 'https://res.cloudinary.com/dp3a4be7p/image/upload/v1666534504/logo_nb3kab.png',
-              }}
-              className="w-[100px] h-[30px]"
-            />
-          </View>
-        </View>
-
-        <View className="mt-1 rounded-lg justify-between flex-row items-center bg-[#fff] border border-gray-300 px-3">
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                className="text-gray-800 h-11 flex-1 bg-opacity-25"
-                onChangeText={(text) => {
-                  onChange(text);
-                }}
-                value={value}
-                onSubmitEditing={(e) => {
-                  setSearching(true);
-                  setTextState(e.nativeEvent.text);
-                  searchFunction(e.nativeEvent.text);
-                }}
-                defaultValue={textState}
-                placeholder="Search events by name"
-                underlineColorAndroid="transparent"
-                placeholderTextColor={'#4a4a4b'}
-              />
-            )}
-            name="search"
-          />
-          <TouchableOpacity className="bg-gry-300 p-1 rounded-full">
-            {textState ? (
-              <AntDesign
-                onPress={() => {
-                  fetchData();
-                  setTextState('');
-                  setSearching(false);
-                }}
-                name="closecircleo"
-                size={19}
-                color="gray"
-              />
-            ) : (
-              <Feather name="search" size={19} color="black" />
-            )}
-          </TouchableOpacity>
         </View>
       </View>
     </BlurView>

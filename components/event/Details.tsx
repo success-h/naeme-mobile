@@ -7,16 +7,11 @@ import { HomeRootStackParamList } from '../../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import MapView, { Marker } from 'react-native-maps';
+import { NavigationProps } from './DynamicHeader';
 
-export type NavigationProps = NativeStackNavigationProp<
-  HomeRootStackParamList,
-  'EditEventModal'
->;
-
-export default function EventDetail({ data }: DataProps) {
+export default function Details({ data }: DataProps) {
   const navigation = useNavigation<NavigationProps>();
 
-  // date functions
   const dt = moment(data.end_date + ' ' + data?.end_time, 'DD/MM/YYYY HH:mm');
   const targetTime = moment(dt);
   const [currentTime, setCurrentTime] = useState(moment());
@@ -30,32 +25,10 @@ export default function EventDetail({ data }: DataProps) {
 
   const Lng: number = -118.192395;
   const Lat: number = 33.769327;
-
   return (
-    <View className="mb-32">
-      <MapView
-        initialRegion={{
-          latitude: Lat,
-          longitude: Lng,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005,
-        }}
-        className="w-full h-[477px]"
-      />
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        className="bg-gray-300 shadow-2xl h-10 w-10 absolute rounded-full top-[50px] left-4 items-center p-2"
-      >
-        <Ionicons name="arrow-back-outline" size={24} color="black" />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => navigation.navigate('EditEventModal', { data })}
-        className="bg-white shadow-2xl h-10 w-10 absolute rounded-full top-[390px] right-5 items-center p-2"
-      >
-        <Entypo name="edit" size={24} color="black" />
-      </TouchableOpacity>
-      <View className="bg-slate-50 mx-4 rounded-xl shadow-md shadow-gray-200 mt-7 p-4">
+    <View className="mb-9 bg-white mt-4 rounded-3xl z-20">
+      <View className="mx-4 mt-7">
+        <Text className="mt-4 text-2xl my-3 font-bold">{data.title}</Text>
         <TouchableOpacity className="p-2 mt-1 rounded-full flex-row items-center justify-between bg-teal-300">
           <View className="flex-row items-center">
             <Entypo name="time-slot" size={24} color="black" />
@@ -120,7 +93,7 @@ export default function EventDetail({ data }: DataProps) {
                   setText(data.description);
                   setReadMore(true);
                 } else {
-                  setText(data.description.slice(0, 70));
+                  setText(data.description.slice(0, 100));
                   setReadMore(false);
                 }
               }}
@@ -130,9 +103,16 @@ export default function EventDetail({ data }: DataProps) {
             </Text>
           </Text>
         </View>
-        <Image
-          source={{ uri: data.image }}
-          className="h-[300px] mt-7 rounded-md"
+      </View>
+      <View className="h-[477px] rounded-2xl">
+        <MapView
+          initialRegion={{
+            latitude: Lat,
+            longitude: Lng,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          }}
+          className="h-full mt-7"
         />
       </View>
     </View>

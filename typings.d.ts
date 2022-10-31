@@ -146,3 +146,5 @@ type EventProps = {
     qr_code: string;
   }[];
 };
+
+type SringOrNull = string | null;

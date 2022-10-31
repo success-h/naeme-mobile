@@ -8,7 +8,7 @@ export default function NotFound({ title }: { title: string }) {
   console.log('LOading:', loading);
   if (loading) return <Loader isLoading={loading} />;
   return (
-    <View className="bg-white min-h-[700px]  items-center justify-center">
+    <View className="bg-white min-h-[70px]  items-center justify-center">
       <View></View>
       <Text className="w-3/5 text-2xl text-gray-600 text-center">
         No {title} match in our database

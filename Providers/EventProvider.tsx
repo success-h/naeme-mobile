@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useState,
 } from 'react';
 
@@ -22,7 +23,13 @@ interface EventCartContextType {
   setSearching: React.Dispatch<React.SetStateAction<boolean>>;
   setTextState: React.Dispatch<React.SetStateAction<string>>;
   textState: string;
+  location: LocationType;
 }
+
+type LocationType = {
+  country: string | null;
+  city: string | null;
+};
 
 const EventContext = createContext({} as EventCartContextType);
 
@@ -38,6 +45,10 @@ export default function EventProvider({ children }: { children: ReactNode }) {
   const [searching, setSearching] = useState<boolean>(false);
   const [textState, setTextState] = useState('');
   const [prevPage, setPreviousPage] = useState<string | null>(null);
+  const [location, setLocation] = useState<LocationType>({
+    city: null,
+    country: null,
+  });
 
   const loadMoreItem = () => {
     setLoading(true);
@@ -57,7 +68,6 @@ export default function EventProvider({ children }: { children: ReactNode }) {
       if (nextPage !== prevPage) {
         const response = await fetch(`${nextPage}`);
         const data = await response.json();
-        console.log('Data:', data);
         if (eventData.length < data?.count) {
           setEventData([...eventData, ...data?.results]);
         }
@@ -79,13 +89,13 @@ export default function EventProvider({ children }: { children: ReactNode }) {
   };
 
   const fetchData = useCallback(async () => {
+    setTextState('');
     try {
       setSearching(false);
       const response = await fetch(
         `https://naeme-api.herokuapp.com/api/events`
       );
       const data = await response.json();
-      console.log('data: ', data);
       setEventData(data?.results);
       setNextPage(data?.next);
       setPreviousPage(data.previous);
@@ -96,6 +106,24 @@ export default function EventProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const fetchIpLocation = () => {
+    fetch('https://ipapi.co/json/')
+      .then((response) => response.json())
+      .then((data) => {
+        setLocation({
+          city: data?.city,
+          country: data?.country_name,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useLayoutEffect(() => {
+    fetchIpLocation();
+  }, []);
+
   useEffect(() => {
     setLoading(true);
     fetchData();
@@ -104,6 +132,7 @@ export default function EventProvider({ children }: { children: ReactNode }) {
   return (
     <EventContext.Provider
       value={{
+        location,
         loading,
         setLoading,
         eventData,

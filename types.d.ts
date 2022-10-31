@@ -7,11 +7,11 @@ import {
   CompositeScreenProps,
   NavigatorScreenParams,
   RouteProp,
-} from "@react-navigation/native";
+} from '@react-navigation/native';
 import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
-} from "@react-navigation/native-stack";
+} from '@react-navigation/native-stack';
 
 export type AuthRootStackParamList = {
   SignIn: undefined;
@@ -42,7 +42,11 @@ export type NavigationProps<T extends keyof HomeRootStackParamList> = {
   navigation: NativeStackNavigationProp<HomeRootStackParamList, T>;
   route: RouteProp<HomeRootStackParamList, T>;
 };
-// CompositeNavigationProp<>;
+
+export type AuthNavigationProps<T extends keyof HomeRootStackParamList> = {
+  navigation: NativeStackNavigationProp<AuthRootStackParamList, T>;
+  route: RouteProp<AuthRootStackParamList, T>;
+};
 
 export type ModalScreenProps<T extends keyof HomeRootStackParamList> = {
   navigation: NativeStackNavigationProp<HomeRootStackParamList, T>;

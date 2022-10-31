@@ -1,7 +1,12 @@
 import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import { useAuthContext } from '../Providers/AuthProvider';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export default function SignIn({}) {
+  const { loading, login, logout, user, setLoading } = useAuthContext();
+
   return (
     <View className="bg-white w-full flex-1 justify-center items-center">
       <View className="-mt-32 mb-6">
@@ -26,11 +31,14 @@ export default function SignIn({}) {
         Discover amazing events happening around you!
       </Text>
       <View className="mt-10 items-center absolute bottom-0 mb-14">
-        <Text className="text-sm px-7 mt-1 text-center font-semibold text">
+        <Text className="text-sm px-7 mb-3 text-gray-700 mt-1 text-center font-semibold text">
           lets get you started with your account
         </Text>
-        <View className="flex-row gap-10 mt-1 items-start justify-between">
-          <TouchableOpacity className="px-4 py-2 bg-slate-100 rounded-md">
+        <View className="flex-row gap-10 items-start justify-between">
+          <TouchableOpacity
+            onPress={() => login()}
+            className="px-4 py-2 bg-slate-100 rounded-md"
+          >
             <Image
               source={{
                 uri: 'https://res.cloudinary.com/dp3a4be7p/image/upload/v1667132554/google_logo_oedjai.png',
@@ -39,7 +47,10 @@ export default function SignIn({}) {
               resizeMode="contain"
             />
           </TouchableOpacity>
-          <TouchableOpacity className="px-4 py-2 bg-slate-100 rounded-md">
+          <TouchableOpacity
+            onPress={() => logout()}
+            className="px-4 py-2 bg-slate-100 rounded-md"
+          >
             <AntDesign name="apple1" size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity className="px-4 py-2 bg-slate-100 rounded-md items">

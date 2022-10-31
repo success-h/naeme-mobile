@@ -19,7 +19,7 @@ export type NavigationProps = NativeStackNavigationProp<
   'Detail'
 >;
 
-export default function EventCard({ data }: { data: EventProps }) {
+export default function FeaturedEventCard({ data }: { data: EventProps }) {
   const navigation = useNavigation<NavigationProps>();
   const date = moment(data.start_date).format('MMMM D, YYYY');
   const { location } = useEventContext();
@@ -29,16 +29,31 @@ export default function EventCard({ data }: { data: EventProps }) {
       touchSoundDisabled={true}
       activeOpacity={0.6}
       onPress={() => navigation.navigate('Detail', { data })}
-      className="my-2 mx-3 rounded-2xl shadow-md shadow-gray-200 flex-row"
+      className="bg-white my-2 mx-3 rounded-2xl shadow-md shadow-gray-200 w-[240px] h-[230px]"
     >
       <View className="mx-2 mt-2">
         <Image
           resizeMode="cover"
-          className="w-[90px] h-[90px] rounded-2xl"
+          className="w-full h-[150px] rounded-2xl"
           source={{ uri: data.image }}
         />
+
+        {!data.lowest_price && !data.highest_price && (
+          <Text className="left-3 top-3 text-xs absolute bg-gray-50 px-2 rounded-xl">
+            $0.00
+          </Text>
+        )}
+        {data.lowest_price === data.highest_price ? (
+          <Text className="left-3 top-3 text-xs absolute bg-gray-50 px-1 rounded-xl">
+            ${data.lowest_price}
+          </Text>
+        ) : (
+          <Text className="left-3 top-3 text-xs absolute bg-gray-50 px-1 rounded-xl">
+            ${data.lowest_price} - ${data.highest_price}
+          </Text>
+        )}
       </View>
-      <View className="px-2 mt-2 justify-center flex-1">
+      <View className="w-full px-2 mt-2">
         <View className="flex-row px-1 justify-between">
           <Text className="font-bold text-[16px] ">{data.title}</Text>
         </View>

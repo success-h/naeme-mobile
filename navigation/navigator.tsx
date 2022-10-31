@@ -7,9 +7,10 @@ import HomeNavigator from './HomeStackNavigation';
 
 export default function Navigation({}) {
   const { loading, setLoading, user, login } = useAuthContext();
+  console.log('nav user', user);
   return (
     <NavigationContainer>
-      {!user ? <HomeNavigator /> : <AuthNavigator />}
+      {user.username ? <HomeNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );
 }
