@@ -29,7 +29,12 @@ export default function Details({ data }: DataProps) {
     <ScrollView className="rounded-[30px]">
       <View className="mx-4">
         <View className="flex-row justify-between mt-4">
-          <Text className="mt-4 text-2xl my-3 font-bold">{data.title}</Text>
+          <Text
+            className="mt-4 text-2xl my-3 font-bold"
+            style={{ fontFamily: 'open-sans-bold' }}
+          >
+            {data.title}
+          </Text>
           <View className="flex-row items-center justify-between">
             <View className="bg-rose-200 rounded-full px-2 py-1">
               {!data.lowest_price && !data.highest_price ? (
@@ -79,8 +84,11 @@ export default function Details({ data }: DataProps) {
           </View>
 
           <View className="mt-4">
-            <Text className="font-semibold mt-3 text-lg">Description:</Text>
-            <Text className="text-gray-700 leading-5">
+            <Text className="font-semibold my-3 text-lg">Description:</Text>
+            <Text
+              className="text-gray-700 leading-5"
+              style={{ fontFamily: 'open-sans-medium' }}
+            >
               {text} {!readMore && '...'}
               <Text
                 onPress={() => {

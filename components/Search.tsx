@@ -58,7 +58,10 @@ export default function Search() {
 
   return (
     <View className="-mt-3">
-      <Text className="text-gray-200 font-bold text-lg mt-2">
+      <Text
+        style={{ fontFamily: 'open-sans-bold' }}
+        className="text-gray-200 font-bold text-lg mt-2"
+      >
         Discover Amazing Events
       </Text>
       <View className="mt-1 rounded-3xl my-2 justify-between flex-row items-center shadow-2xl bg-gray-600 px-2">

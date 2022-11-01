@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { Platform, Text, useColorScheme, View } from 'react-native';
-
+import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 import useCachedResources from './hooks/useCachedResources';
 import Navigation from './navigation/navigator';
 import { AuthProvider } from './Providers/AuthProvider';

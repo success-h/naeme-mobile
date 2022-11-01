@@ -7,6 +7,7 @@ import {
   Animated,
   ScrollView,
 } from 'react-native';
+
 import React, { ReactElement, ReactNode } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { HomeRootStackParamList, HomeStackScreenProps } from '../../types';
