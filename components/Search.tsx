@@ -24,7 +24,8 @@ export default function Search() {
 
   const {
     control,
-    formState: { errors, isDirty },
+    resetField,
+    formState: { errors, isDirty, dirtyFields },
   } = useForm({
     defaultValues: {
       search: undefined,
@@ -56,11 +57,11 @@ export default function Search() {
   }, []);
 
   return (
-    <View className="mx-4">
-      <Text className="text-gray-900 font-bold text-md mt-2">
+    <View className="-mt-3">
+      <Text className="text-gray-200 font-bold text-lg mt-2">
         Discover Amazing Events
       </Text>
-      <View className="mt-1 rounded-3xl my-2 justify-between flex-row items-center shadow-2xl bg-white px-2">
+      <View className="mt-1 rounded-3xl my-2 justify-between flex-row items-center shadow-2xl bg-gray-600 px-2">
         <Controller
           control={control}
           rules={{
@@ -68,7 +69,7 @@ export default function Search() {
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              className="text-gray-500  h-10 flex-1 bg-opacity-25"
+              className="text-gray-300  h-10 flex-1 bg-opacity-25"
               onChangeText={(text) => {
                 onChange(text);
               }}
@@ -76,31 +77,30 @@ export default function Search() {
               onBlur={onBlur}
               onSubmitEditing={(e) => {
                 setSearching(true);
-                setTextState(e.nativeEvent.text);
                 searchFunction(e.nativeEvent.text);
               }}
               defaultValue={textState}
               placeholder="Search events by name"
               underlineColorAndroid="transparent"
-              placeholderTextColor={'#c5c5c5'}
+              placeholderTextColor={'#191d26'}
             />
           )}
           name="search"
         />
         <TouchableOpacity className="bg-gry-300 p-1 rounded-full">
-          {textState ? (
+          {isDirty ? (
             <AntDesign
               onPress={() => {
-                setTextState('');
+                resetField('search');
                 setSearching(false);
                 fetchData();
               }}
               name="closecircleo"
               size={24}
-              color="3484646"
+              color="#000"
             />
           ) : (
-            <Feather name="search" size={24} color="#484646" />
+            <Feather name="search" size={24} color="#eee" />
           )}
         </TouchableOpacity>
       </View>

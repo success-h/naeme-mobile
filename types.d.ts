@@ -18,13 +18,19 @@ export type AuthRootStackParamList = {
 };
 
 export type HomeRootStackParamList = {
-  Home: undefined;
+  Main: undefined;
   EditEventModal: DataProps;
   PaymentModal: undefined;
   Modal: undefined;
   Detail: DataProps;
   NotFound: undefined;
+};
+
+export type RootTabParamList = {
+  Home: undefined;
   User: undefined;
+  Ticket: undefined;
+  Scan: undefined;
 };
 
 export type HomeStackScreenProps<Screen extends keyof HomeRootStackParamList> =
@@ -37,6 +43,10 @@ export type AuthStackScreenProps<Screen extends keyof AuthRootStackParamList> =
 //   NativeStackNavigationProp<HomeRootStackParamList, "Home">,
 //   NativeStackNavigationProp<AuthRootStackParamList, "SignIn">
 // >;
+export type CompositeRootProps = CompositeScreenProps<
+  BottomTabScreenProps<RootTabParamList>,
+  NativeStackScreenProps<HomeRootStackParamList>
+>;
 
 export type NavigationProps<T extends keyof HomeRootStackParamList> = {
   navigation: NativeStackNavigationProp<HomeRootStackParamList, T>;

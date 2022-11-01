@@ -24,6 +24,8 @@ interface EventCartContextType {
   setTextState: React.Dispatch<React.SetStateAction<string>>;
   textState: string;
   location: LocationType;
+  like: boolean;
+  setLike: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 type LocationType = {
@@ -45,6 +47,8 @@ export default function EventProvider({ children }: { children: ReactNode }) {
   const [searching, setSearching] = useState<boolean>(false);
   const [textState, setTextState] = useState('');
   const [prevPage, setPreviousPage] = useState<string | null>(null);
+  const [like, setLike] = useState(false);
+
   const [location, setLocation] = useState<LocationType>({
     city: null,
     country: null,
@@ -82,14 +86,11 @@ export default function EventProvider({ children }: { children: ReactNode }) {
   };
 
   const handleRefresh = () => {
-    setTextState('');
     setLoading(true);
-    setTextState('');
     fetchData();
   };
 
   const fetchData = useCallback(async () => {
-    setTextState('');
     try {
       setSearching(false);
       const response = await fetch(
@@ -146,6 +147,8 @@ export default function EventProvider({ children }: { children: ReactNode }) {
         setSearching,
         setTextState,
         textState,
+        like,
+        setLike,
       }}
     >
       {children}

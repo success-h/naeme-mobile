@@ -18,7 +18,7 @@ export default function App() {
         <EventProvider>
           <React.Fragment>
             <StatusBar
-              style={Platform.OS === 'ios' ? 'dark' : 'light'}
+              style={Platform.OS === 'ios' ? 'light' : 'light'}
               backgroundColor="#000"
             />
             <Navigation />
