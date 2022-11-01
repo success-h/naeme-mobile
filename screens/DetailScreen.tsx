@@ -40,17 +40,17 @@ export default function DetailScreen({
           }
           className={` ${
             Platform.OS === 'ios' ? 'top-4' : 'top-12'
-          } bg-[#555556] shadow-sm shadow-gray-500 z-30 absolute rounded-full right-5 items-center p-2`}
+          } bg-[#f7f7f7] shadow-sm shadow-gray-500 z-30 absolute rounded-full right-5 items-center p-2`}
         >
-          <Entypo name="edit" size={17} color="white" />
+          <Entypo name="edit" size={17} color="#181818" />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           className={` ${
             Platform.OS === 'ios' ? 'top-4' : 'top-12'
-          } bg-[#555556] shadow-sm shadow-gray-500 z-30 absolute rounded-full left-5 items-center p-2`}
+          } bg-[#f7f7f7] shadow-sm shadow-gray-500 z-30 absolute rounded-full left-5 items-center p-2`}
         >
-          <AntDesign name="left" size={17} color="white" />
+          <AntDesign name="left" size={17} color="#181818" />
         </TouchableOpacity>
       </Animated.ScrollView>
 
