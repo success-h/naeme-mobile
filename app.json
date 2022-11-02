@@ -4,6 +4,7 @@
     "slug": "naeme-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
+    "scheme": "testing",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -22,10 +23,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.successhy.naememobile"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
+    },
+
+    "extra": {
+      "eas": {
+        "projectId": "f5f32f8c-cf92-4d57-a3b1-a1d2d59a814f"
+      }
     }
   }
 }

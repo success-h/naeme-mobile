@@ -6,6 +6,8 @@ import useCachedResources from './hooks/useCachedResources';
 import Navigation from './navigation/navigator';
 import { AuthProvider } from './Providers/AuthProvider';
 import EventProvider from './Providers/EventProvider';
+import 'expo-dev-client';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();

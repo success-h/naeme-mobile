@@ -13,7 +13,7 @@ import EventCard from '../../components/event/EventCard';
 import FeaturedEvent from '../../components/event/FeaturedEvent';
 import HomeHeader from '../../components/HomeHeader';
 import { Loader } from '../../components/Loader';
-import { useEventContext } from '../../Providers/EventProvider';
+import { useEventContext } from '../../hooks/useEvent';
 import { CompositeRootProps } from '../../types';
 
 const HomeScreen = ({ navigation }: CompositeRootProps) => {

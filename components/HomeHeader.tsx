@@ -8,18 +8,17 @@ import {
   ScrollView,
 } from 'react-native';
 import React, { ReactNode, useCallback, useState } from 'react';
-import { useAuthContext } from '../Providers/AuthProvider';
-import { BlurView } from 'expo-blur';
 import { EvilIcons } from '@expo/vector-icons';
 
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeRootStackParamList, RootTabParamList } from '../types';
-import { useEventContext } from '../Providers/EventProvider';
 import { Controller, useForm } from 'react-hook-form';
 import Search from './Search';
 import { LinearGradient } from 'expo-linear-gradient';
 import FeaturedEvent from './event/FeaturedEvent';
+import { useEventContext } from '../hooks/useEvent';
+import { useAuthContext } from '../hooks/useAuth';
 
 type NavProps = NavigationProp<RootTabParamList, 'Home'>;
 
@@ -57,7 +56,7 @@ function Header() {
             )}
           </View>
         </View>
-        <View className="gap-2">
+        {/* <View className="gap-2">
           <TouchableOpacity
             onPress={() => navigation.navigate('User')}
             className="w-[50px] h-[50px]"
@@ -68,7 +67,7 @@ function Header() {
               resizeMode="contain"
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
       <Search />
     </View>

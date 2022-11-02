@@ -148,3 +148,14 @@ type EventProps = {
 };
 
 type SringOrNull = string | null;
+
+export type User = {
+  username: SringOrNull;
+  email: SringOrNull;
+  tokens: {
+    refresh: SringOrNull;
+    access: SringOrNull;
+  };
+  auth_provider: SringOrNull;
+  id: SringOrNull;
+};

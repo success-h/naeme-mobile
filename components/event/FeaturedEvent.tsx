@@ -13,11 +13,11 @@ import { useNavigation } from '@react-navigation/native';
 import { HomeRootStackParamList, HomeStackScreenProps } from '../../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import moment from 'moment';
-import { useEventContext } from '../../Providers/EventProvider';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigationProps } from './EventCard';
 import { formatTime } from '../../Utils/formatter';
+import { useEventContext } from '../../hooks/useEvent';
 
 export default function FeaturedEvent() {
   const navigation = useNavigation<useNavigationProps>();

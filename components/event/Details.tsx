@@ -8,6 +8,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigationProps } from './EventCard';
+import { DataProps } from '../../typings';
 
 export default function Details({ data }: DataProps) {
   const navigation = useNavigation<useNavigationProps>();

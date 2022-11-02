@@ -13,8 +13,9 @@ import { useNavigation } from '@react-navigation/native';
 import { HomeRootStackParamList, HomeStackScreenProps } from '../../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import moment from 'moment';
-import { useEventContext } from '../../Providers/EventProvider';
 import { Ionicons } from '@expo/vector-icons';
+import { DataProps } from '../../typings';
+import { useEventContext } from '../../hooks/useEvent';
 
 export type useNavigationProps = NativeStackNavigationProp<
   HomeRootStackParamList,
@@ -23,8 +24,7 @@ export type useNavigationProps = NativeStackNavigationProp<
 
 export default function EventCard({ data }: DataProps) {
   const navigation = useNavigation<useNavigationProps>();
-  const { like, setLike } = useEventContext();
-  const { location } = useEventContext();
+  const { like, setLike, location } = useEventContext();
   const month = moment(data.start_date).format('MMM');
   const day = moment(data.start_date).format('DD');
 

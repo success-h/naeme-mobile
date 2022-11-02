@@ -1,7 +1,7 @@
 import { View, Text, Image } from 'react-native';
 import React from 'react';
-import { useEventContext } from '../Providers/EventProvider';
 import { Loader } from './Loader';
+import { useEventContext } from '../hooks/useEvent';
 
 export default function NotFound({ title }: { title: string }) {
   const { loading } = useEventContext();

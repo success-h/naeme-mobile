@@ -1,11 +1,10 @@
 import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { useAuthContext } from '../Providers/AuthProvider';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useAuthContext } from '../hooks/useAuth';
 
 export default function SignIn({}) {
-  const { loading, login, logout, user, setLoading } = useAuthContext();
+  const { loading, login, logout, user, setLoading, googleRegister } =
+    useAuthContext();
 
   return (
     <View className="bg-white w-full flex-1 justify-center items-center">
@@ -36,7 +35,7 @@ export default function SignIn({}) {
         </Text>
         <View className="flex-row gap-10 items-start justify-between">
           <TouchableOpacity
-            onPress={() => login()}
+            onPress={() => googleRegister()}
             className="px-4 py-2 bg-slate-100 rounded-md"
           >
             <Image
@@ -47,10 +46,7 @@ export default function SignIn({}) {
               resizeMode="contain"
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => logout()}
-            className="px-4 py-2 bg-slate-100 rounded-md"
-          >
+          <TouchableOpacity className="px-4 py-2 bg-slate-100 rounded-md">
             <AntDesign name="apple1" size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity className="px-4 py-2 bg-slate-100 rounded-md items">

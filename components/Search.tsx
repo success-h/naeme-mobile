@@ -9,8 +9,8 @@ import {
 import React, { ReactNode, useCallback, useState } from 'react';
 
 import { AntDesign, Feather } from '@expo/vector-icons';
-import { useEventContext } from '../Providers/EventProvider';
 import { Controller, useForm } from 'react-hook-form';
+import { useEventContext } from '../hooks/useEvent';
 
 export default function Search() {
   const {

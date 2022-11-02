@@ -18,10 +18,9 @@ export type AuthRootStackParamList = {
 };
 
 export type HomeRootStackParamList = {
-  Main: undefined;
+  Main: NavigatorScreenParams<RootTabParamList> | undefined;
   EditEventModal: DataProps;
   PaymentModal: undefined;
-  Modal: undefined;
   Detail: DataProps;
   NotFound: undefined;
 };
@@ -33,16 +32,15 @@ export type RootTabParamList = {
   Scan: undefined;
 };
 
+export type RootStackScreenProps<Screen extends keyof HomeRootStackParamList> =
+  NativeStackScreenProps<HomeRootStackParamList, Screen>;
+
 export type HomeStackScreenProps<Screen extends keyof HomeRootStackParamList> =
   NativeStackScreenProps<HomeRootStackParamList, Screen>;
 
 export type AuthStackScreenProps<Screen extends keyof AuthRootStackParamList> =
   NativeStackScreenProps<AuthRootStackParamList, Screen>;
 
-// export type ModalScreenNavigationProps = CompositeNavigationProp<
-//   NativeStackNavigationProp<HomeRootStackParamList, "Home">,
-//   NativeStackNavigationProp<AuthRootStackParamList, "SignIn">
-// >;
 export type CompositeRootProps = CompositeScreenProps<
   BottomTabScreenProps<RootTabParamList>,
   NativeStackScreenProps<HomeRootStackParamList>

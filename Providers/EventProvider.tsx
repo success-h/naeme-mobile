@@ -8,6 +8,7 @@ import React, {
   useLayoutEffect,
   useState,
 } from 'react';
+import { EventDataTypes } from '../typings';
 
 interface EventCartContextType {
   loading: boolean;
@@ -33,11 +34,7 @@ type LocationType = {
   city: string | null;
 };
 
-const EventContext = createContext({} as EventCartContextType);
-
-export function useEventContext() {
-  return useContext(EventContext);
-}
+export const EventContext = createContext({} as EventCartContextType);
 
 export default function EventProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true);
