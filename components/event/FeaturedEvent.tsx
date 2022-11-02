@@ -7,7 +7,7 @@ import {
   Animated,
   ScrollView,
 } from 'react-native';
-import React, { ReactElement, ReactNode, useState } from 'react';
+import React, { ReactElement, ReactNode, useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { HomeRootStackParamList, HomeStackScreenProps } from '../../types';
@@ -15,14 +15,46 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import moment from 'moment';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { useNavigationProps } from './EventCard';
 import { formatTime } from '../../Utils/formatter';
 import { useEventContext } from '../../hooks/useEvent';
+import axios from 'axios';
+import { serverUrl } from '../../constants/credentials';
+import { useAuthContext } from '../../hooks/useAuth';
+import { DataProps, EventProps } from '../../typings';
+
+export type useNavigationProps = NativeStackNavigationProp<
+  HomeRootStackParamList,
+  'Detail'
+>;
 
 export default function FeaturedEvent() {
   const navigation = useNavigation<useNavigationProps>();
-  const { eventData } = useEventContext();
-  const [like, setLike] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { user } = useAuthContext();
+  const { fetchFeatured, featuredEvent } = useEventContext();
+  console.log(featuredEvent);
+
+  const likeEvent = async (liked: boolean, id: string) => {
+    console.log(liked);
+    const formData = new FormData();
+    if (liked === true) {
+      formData.append('liked', false);
+    } else {
+      formData.append('liked', true);
+    }
+    const response = await axios.put(
+      `https://naeme-api.herokuapp.com/api/events/${id}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Bearer ${user.tokens.access}`,
+        },
+      }
+    );
+    console.log('likeresponse', response);
+  };
 
   return (
     <View>
@@ -33,7 +65,7 @@ export default function FeaturedEvent() {
         style={{ paddingVertical: 20 }}
         className=""
       >
-        {eventData.map((data) => {
+        {featuredEvent.map((data) => {
           const month = moment(data.start_date).format('MMM');
           const day = moment(data.start_date).format('DD');
           return (
@@ -45,7 +77,7 @@ export default function FeaturedEvent() {
               <View className="shadow-md">
                 <Image
                   resizeMode="cover"
-                  className="rounded-t-3xl h-[147px]"
+                  className="rounded-t-3xl h-[132px]"
                   source={{ uri: data?.image }}
                 />
               </View>
@@ -73,9 +105,12 @@ export default function FeaturedEvent() {
                   )}
                   <TouchableOpacity
                     activeOpacity={0.2}
-                    onPress={() => setLike(!like)}
+                    onPress={() => {
+                      console.log(data.liked);
+                      // likeEvent(data.liked, data.id);
+                    }}
                   >
-                    {like ? (
+                    {data.liked === true ? (
                       <Ionicons name="heart" size={27} color="red" />
                     ) : (
                       <Ionicons name="heart-outline" size={27} color="red" />

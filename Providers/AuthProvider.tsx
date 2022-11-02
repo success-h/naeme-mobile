@@ -27,8 +27,9 @@ interface AuthProviderProps {
 export const AuthContext = createContext({} as AuthProviderProps);
 
 const defaultUser = {
-  email: null,
   username: null,
+  email: null,
+  image: undefined,
   auth_provider: null,
   id: null,
   tokens: {
@@ -40,6 +41,7 @@ const defaultUser = {
 const dummyUser: User = {
   email: 'succes@test.com',
   username: 'SUCCESS HYCENTH',
+  image: '',
   auth_provider: 'google',
   id: 'uwebuob',
   tokens: {
@@ -60,6 +62,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   const [_, googleResponse, googlePromptAsync] = Google.useIdTokenAuthRequest({
     expoClientId:
       '919602408222-pj590en2tl3supl5km6jba6k31oegpgv.apps.googleusercontent.com',
+    scopes: ['profile', 'email'],
     // iosClientId:
     //   '1080382822276-a0ms51p5cfc523bivhchs8nk04u2scq0.apps.googleusercontent.com',
     // androidClientId:
@@ -70,7 +73,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
 
   const googleRegister = async () => {
     const response = await googlePromptAsync();
-    console.log(response);
     if (response.type === 'success') {
       const { id_token } = response.params;
       const user = await googleLoginOrRegister(id_token);

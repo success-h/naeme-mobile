@@ -27,6 +27,8 @@ interface EventCartContextType {
   location: LocationType;
   like: boolean;
   setLike: React.Dispatch<React.SetStateAction<boolean>>;
+  fetchFeatured: () => void;
+  featuredEvent: EventDataTypes;
 }
 
 type LocationType = {
@@ -37,6 +39,8 @@ type LocationType = {
 export const EventContext = createContext({} as EventCartContextType);
 
 export default function EventProvider({ children }: { children: ReactNode }) {
+  const [featuredEvent, setFeaturedEvent] = useState<EventDataTypes>([]);
+
   const [loading, setLoading] = useState<boolean>(true);
   const [nextPage, setNextPage] = useState<string | null>(null);
   const [eventData, setEventData] = useState<EventDataTypes>([]);
@@ -98,9 +102,10 @@ export default function EventProvider({ children }: { children: ReactNode }) {
       setNextPage(data?.next);
       setPreviousPage(data.previous);
       setRefresh(false);
-    } catch (e) {
       setLoading(false);
+    } catch (e) {
       console.log('error- fetchData:', e);
+      setLoading(false);
     }
   }, []);
 
@@ -118,12 +123,25 @@ export default function EventProvider({ children }: { children: ReactNode }) {
       });
   };
 
+  const fetchFeatured = () => {
+    fetch('https://naeme-api.herokuapp.com/api/events/?featured=true')
+      .then((response) => response.json())
+      .then((data) => {
+        setFeaturedEvent(data.results);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   useLayoutEffect(() => {
     fetchIpLocation();
   }, []);
 
   useEffect(() => {
     setLoading(true);
+    fetchFeatured();
     fetchData();
   }, []);
 
@@ -146,6 +164,8 @@ export default function EventProvider({ children }: { children: ReactNode }) {
         textState,
         like,
         setLike,
+        fetchFeatured,
+        featuredEvent,
       }}
     >
       {children}

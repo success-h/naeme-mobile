@@ -19,6 +19,7 @@ import { CompositeRootProps } from '../../types';
 const HomeScreen = ({ navigation }: CompositeRootProps) => {
   const { eventData, loading, loadMoreItem, refresh, handleRefresh } =
     useEventContext();
+  console.log(loading);
 
   return (
     <View>

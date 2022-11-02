@@ -56,18 +56,18 @@ function Header() {
             )}
           </View>
         </View>
-        {/* <View className="gap-2">
+        <View className="gap-2">
           <TouchableOpacity
             onPress={() => navigation.navigate('User')}
             className="w-[50px] h-[50px]"
           >
             <Image
-              source={{ uri: user?.image }}
+              source={{ uri: user.image }}
               className="w-full h-full rounded-full"
               resizeMode="contain"
             />
           </TouchableOpacity>
-        </View> */}
+        </View>
       </View>
       <Search />
     </View>

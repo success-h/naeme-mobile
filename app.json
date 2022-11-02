@@ -4,7 +4,7 @@
     "slug": "naeme-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "testing",
+    "scheme": "naememobile",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {

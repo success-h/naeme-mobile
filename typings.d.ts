@@ -10,8 +10,7 @@ type EventDataTypes = {
   end_date: string;
   start_time: string;
   end_time: string;
-  facebook: string;
-  twitter: string;
+  liked: boolean;
   website: string;
   owner: string;
   organizer: string;
@@ -60,8 +59,7 @@ type DataProps = {
     end_date: string;
     start_time: string;
     end_time: string;
-    facebook: string;
-    twitter: string;
+    liked: boolean;
     website: string;
     owner: string;
     organizer: string;
@@ -110,8 +108,7 @@ type EventProps = {
   end_date: string;
   start_time: string;
   end_time: string;
-  facebook: string;
-  twitter: string;
+  liked: boolean;
   website: string;
   owner: string;
   organizer: string;
@@ -147,15 +144,16 @@ type EventProps = {
   }[];
 };
 
-type SringOrNull = string | null;
+type StringOrNull = string | null;
 
 export type User = {
-  username: SringOrNull;
-  email: SringOrNull;
+  username: StringOrNull;
+  email: StringOrNull;
+  image: string | undefined;
   tokens: {
-    refresh: SringOrNull;
-    access: SringOrNull;
+    refresh: StringOrNull;
+    access: StringOrNull;
   };
-  auth_provider: SringOrNull;
-  id: SringOrNull;
+  auth_provider: StringOrNull;
+  id: StringOrNull;
 };

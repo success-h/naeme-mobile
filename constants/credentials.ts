@@ -1,3 +1,5 @@
+export const serverUrl = 'https://naeme-api.herokuapp.com/api';
+
 export const endpoints = {
-  google: 'https://naeme-api.herokuapp.com/api/account/google/',
+  google: serverUrl + '/account/google/',
 };
