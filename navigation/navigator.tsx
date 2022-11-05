@@ -7,7 +7,6 @@ import HomeNavigator from './HomeStackNavigation';
 
 export default function Navigation({}) {
   const { loading, setLoading, user, login } = useAuthContext();
-  console.log('nav user', user);
   return (
     <NavigationContainer linking={LinkingConfiguration}>
       {user.username ? <HomeNavigator /> : <AuthNavigator />}

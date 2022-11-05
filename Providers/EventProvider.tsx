@@ -8,16 +8,16 @@ import React, {
   useLayoutEffect,
   useState,
 } from 'react';
-import { EventDataTypes } from '../typings';
+import { EventDataTypes, ResponseType } from '../typings';
 
 interface EventCartContextType {
   loading: boolean;
   setLoading(value: boolean): void;
   setNextPage: React.Dispatch<React.SetStateAction<string | null>>;
   nextPage: string | null;
-  eventData: EventDataTypes;
-  setEventData: React.Dispatch<React.SetStateAction<EventDataTypes>>;
-  fetchData: () => Promise<void>;
+  eventData: EventDataTypes[];
+  setEventData: React.Dispatch<React.SetStateAction<EventDataTypes[]>>;
+  fetchData(url: any): Promise<EventDataTypes[]>;
   loadMoreItem: () => void;
   handleRefresh: () => void;
   refresh: boolean;
@@ -27,8 +27,8 @@ interface EventCartContextType {
   location: LocationType;
   like: boolean;
   setLike: React.Dispatch<React.SetStateAction<boolean>>;
-  fetchFeatured: () => void;
-  featuredEvent: EventDataTypes;
+  featuredEvent: EventDataTypes[];
+  setFeaturedEvent: React.Dispatch<React.SetStateAction<EventDataTypes[]>>;
 }
 
 type LocationType = {
@@ -39,11 +39,10 @@ type LocationType = {
 export const EventContext = createContext({} as EventCartContextType);
 
 export default function EventProvider({ children }: { children: ReactNode }) {
-  const [featuredEvent, setFeaturedEvent] = useState<EventDataTypes>([]);
-
+  const [featuredEvent, setFeaturedEvent] = useState<EventDataTypes[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [nextPage, setNextPage] = useState<string | null>(null);
-  const [eventData, setEventData] = useState<EventDataTypes>([]);
+  const [eventData, setEventData] = useState<EventDataTypes[]>([]);
   const [refresh, setRefresh] = useState(true);
   const [searching, setSearching] = useState<boolean>(false);
   const [textState, setTextState] = useState('');
@@ -56,6 +55,7 @@ export default function EventProvider({ children }: { children: ReactNode }) {
   });
 
   const loadMoreItem = () => {
+    console.log("'''''''''''''loading''''''''''");
     setLoading(true);
     if (searching === false) {
       if (nextPage !== null) {
@@ -72,12 +72,14 @@ export default function EventProvider({ children }: { children: ReactNode }) {
     try {
       if (nextPage !== prevPage) {
         const response = await fetch(`${nextPage}`);
-        const data = await response.json();
-        if (eventData.length < data?.count) {
+        const data: ResponseType = await response.json();
+        if (eventData.length < data?.count!) {
           setEventData([...eventData, ...data?.results]);
         }
         setPreviousPage(data.previous);
         setNextPage(data?.next);
+        // if (data.next !== null) {
+        // }
         setLoading(false);
       }
     } catch (e) {
@@ -86,28 +88,27 @@ export default function EventProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const handleRefresh = () => {
-    setLoading(true);
-    fetchData();
+  const Url = 'https://naeme-api.herokuapp.com/api/events';
+
+  const fetchData = async (url: any) => {
+    setSearching(false);
+    const response = await fetch(url);
+    const data: ResponseType = await response.json();
+    if (data.next !== null) {
+      setNextPage(data?.next);
+    }
+    setPreviousPage(data.previous);
+    setRefresh(false);
+    setLoading(false);
+    return data.results;
   };
 
-  const fetchData = useCallback(async () => {
-    try {
-      setSearching(false);
-      const response = await fetch(
-        `https://naeme-api.herokuapp.com/api/events`
-      );
-      const data = await response.json();
-      setEventData(data?.results);
-      setNextPage(data?.next);
-      setPreviousPage(data.previous);
-      setRefresh(false);
-      setLoading(false);
-    } catch (e) {
-      console.log('error- fetchData:', e);
-      setLoading(false);
-    }
-  }, []);
+  const handleRefresh = async () => {
+    setLoading(true);
+    const data: EventDataTypes[] = await fetchData(Url);
+    setEventData(data);
+    setLoading(false);
+  };
 
   const fetchIpLocation = () => {
     fetch('https://ipapi.co/json/')
@@ -123,28 +124,17 @@ export default function EventProvider({ children }: { children: ReactNode }) {
       });
   };
 
-  const fetchFeatured = () => {
-    fetch('https://naeme-api.herokuapp.com/api/events/?featured=true')
-      .then((response) => response.json())
-      .then((data) => {
-        setFeaturedEvent(data.results);
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  useLayoutEffect(() => {
-    fetchIpLocation();
-  }, []);
-
   useEffect(() => {
-    setLoading(true);
-    fetchFeatured();
-    fetchData();
+    fetchIpLocation();
+    (async () => {
+      setLoading(true);
+      const data: EventDataTypes[] = await fetchData(Url);
+      setEventData(data);
+      setLoading(false);
+    })();
   }, []);
 
+  useEffect(() => {}, []);
   return (
     <EventContext.Provider
       value={{
@@ -164,7 +154,7 @@ export default function EventProvider({ children }: { children: ReactNode }) {
         textState,
         like,
         setLike,
-        fetchFeatured,
+        setFeaturedEvent,
         featuredEvent,
       }}
     >

@@ -1,9 +1,8 @@
 import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
 import { useAuthContext } from '../hooks/useAuth';
 
 export default function SignIn({}) {
-  const { loading, login, logout, user, setLoading, googleRegister } =
+  const { loading, login, logout, user, setLoading, googleAuth } =
     useAuthContext();
 
   return (
@@ -29,13 +28,13 @@ export default function SignIn({}) {
       <Text className="text-lg leading-5 px-10 text-center font-semibold text mt-4">
         Discover amazing events happening around you!
       </Text>
-      <View className="mt-10 items-center absolute bottom-0 mb-14">
+      <View className="items-center absolute bottom-0 mb-28">
         <Text className="text-sm px-7 mb-3 text-gray-700 mt-1 text-center font-semibold text">
           lets get you started with your account
         </Text>
         <View className="flex-row gap-10 items-start justify-between">
           <TouchableOpacity
-            onPress={() => googleRegister()}
+            onPress={() => googleAuth()}
             className="px-4 py-2 bg-slate-100 rounded-md"
           >
             <Image
@@ -45,12 +44,6 @@ export default function SignIn({}) {
               className="h-[24px] w-[24px]"
               resizeMode="contain"
             />
-          </TouchableOpacity>
-          <TouchableOpacity className="px-4 py-2 bg-slate-100 rounded-md">
-            <AntDesign name="apple1" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity className="px-4 py-2 bg-slate-100 rounded-md items">
-            <AntDesign name="twitter" size={24} color="#1DA1F2" />
           </TouchableOpacity>
         </View>
       </View>

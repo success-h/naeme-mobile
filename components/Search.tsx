@@ -57,7 +57,7 @@ export default function Search() {
   }, []);
 
   return (
-    <View className="-mt-3">
+    <View className="-mt-3 mx-4">
       <Text
         style={{ fontFamily: 'open-sans-bold' }}
         className="text-gray-200 font-bold text-lg mt-2"
@@ -96,7 +96,7 @@ export default function Search() {
               onPress={() => {
                 resetField('search');
                 setSearching(false);
-                fetchData();
+                // fetchData();
               }}
               name="closecircleo"
               size={24}

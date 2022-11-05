@@ -5,7 +5,6 @@ import { useEventContext } from '../hooks/useEvent';
 
 export default function NotFound({ title }: { title: string }) {
   const { loading } = useEventContext();
-  console.log('LOading:', loading);
   if (loading) return <Loader isLoading={loading} />;
   return (
     <View className="bg-white min-h-[70px]  items-center justify-center">

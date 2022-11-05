@@ -19,10 +19,6 @@ export default function App() {
       <AuthProvider>
         <EventProvider>
           <React.Fragment>
-            <StatusBar
-              style={Platform.OS === 'ios' ? 'light' : 'light'}
-              backgroundColor="#000"
-            />
             <Navigation />
           </React.Fragment>
         </EventProvider>

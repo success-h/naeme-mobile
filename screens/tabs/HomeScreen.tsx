@@ -1,4 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient';
+import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   FlatList,
@@ -9,26 +10,29 @@ import {
   View,
 } from 'react-native';
 import NotFound from '../../components/Empty';
-import EventCard from '../../components/event/EventCard';
-import FeaturedEvent from '../../components/event/FeaturedEvent';
+import EventCard from '../../components/EventCard';
+import FeaturedEvent from '../../components/FeaturedEvent';
 import HomeHeader from '../../components/HomeHeader';
 import { Loader } from '../../components/Loader';
 import { useEventContext } from '../../hooks/useEvent';
-import { CompositeRootProps } from '../../types';
+import { RootTabScreenProps } from '../../types';
 
-const HomeScreen = ({ navigation }: CompositeRootProps) => {
+const HomeScreen = ({ navigation, route }: RootTabScreenProps<'Home'>) => {
   const { eventData, loading, loadMoreItem, refresh, handleRefresh } =
     useEventContext();
-  console.log(loading);
 
   return (
     <View>
+      <StatusBar
+        style={Platform.OS === 'ios' ? 'light' : 'light'}
+        backgroundColor="#000"
+      />
       <HomeHeader />
       <FlatList
-        contentContainerStyle={{ paddingBottom: 200 }}
+        contentContainerStyle={{ paddingBottom: 220 }}
         data={eventData}
         renderItem={({ item }) => {
-          return <EventCard data={item} />;
+          return <EventCard {...item} />;
         }}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
@@ -40,7 +44,7 @@ const HomeScreen = ({ navigation }: CompositeRootProps) => {
         ListFooterComponent={<Loader isLoading={loading} />}
         ListEmptyComponent={() => (
           <View>
-            {!loading && eventData.length === 0 && <NotFound title="event" />}
+            {!loading && eventData?.length === 0 && <NotFound title="event" />}
           </View>
         )}
         onEndReached={loadMoreItem}

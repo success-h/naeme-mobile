@@ -1,6 +1,10 @@
 import { Text, TouchableOpacity, View } from 'react-native';
+import { RootTabScreenProps } from '../../types';
 
-export default function ScannerScreen({}) {
+export default function ScannerScreen({
+  navigation,
+  route,
+}: RootTabScreenProps<'Scan'>) {
   return (
     <View>
       <Text>This screen is for scanner</Text>

@@ -1,16 +1,24 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { androidId } from 'expo-application';
+import { AuthRequestPromptOptions, AuthSessionResult } from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
-import { createContext, ReactNode, useContext, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { useMutation, UseMutationResult } from 'react-query';
+import {
+  androidGoogleCliendId,
+  expoGoogleCliendId,
+  iosGoogleCliendId,
+} from '../constants/credentials';
 import { googleLoginOrRegister } from '../service/user';
 import { AuthRootStackParamList } from '../types';
 import { User } from '../typings';
-
-export type useAuthNavigationProps = NativeStackNavigationProp<
-  AuthRootStackParamList,
-  'SignIn'
->;
 
 interface AuthProviderProps {
   user: User;
@@ -21,7 +29,9 @@ interface AuthProviderProps {
   setLoading(loading: boolean): void;
   setAccessToken: React.Dispatch<React.SetStateAction<string>>;
   accessToken: string;
-  googleRegister: () => Promise<void>;
+  googleAuth: (
+    options?: AuthRequestPromptOptions | undefined
+  ) => Promise<AuthSessionResult>;
 }
 
 export const AuthContext = createContext({} as AuthProviderProps);
@@ -59,28 +69,46 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [accessToken, setAccessToken] = useState('');
 
-  const [_, googleResponse, googlePromptAsync] = Google.useIdTokenAuthRequest({
-    expoClientId:
-      '919602408222-pj590en2tl3supl5km6jba6k31oegpgv.apps.googleusercontent.com',
+  const [_, googleResponse, googleAuth] = Google.useIdTokenAuthRequest({
+    expoClientId: expoGoogleCliendId,
     scopes: ['profile', 'email'],
-    // iosClientId:
-    //   '1080382822276-a0ms51p5cfc523bivhchs8nk04u2scq0.apps.googleusercontent.com',
-    // androidClientId:
-    //   '1080382822276-dqohv9donltabnijor1uun2765hstr4v.apps.googleusercontent.com',
-    // webClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
+    iosClientId: iosGoogleCliendId,
+    androidClientId: androidGoogleCliendId,
     // selectAccount: true,
   });
 
-  const googleRegister = async () => {
-    const response = await googlePromptAsync();
-    if (response.type === 'success') {
-      const { id_token } = response.params;
-      const user = await googleLoginOrRegister(id_token);
-      if (user) {
-        setUser(user);
+  useEffect(() => {
+    const signInWithGoogle = async (id_token: string) => {
+      try {
+        const user = await googleLoginOrRegister(id_token);
+        if (user) {
+          setUser(user);
+        }
+      } catch (e) {
+        console.log(e);
       }
+    };
+
+    if (googleResponse?.type === 'success') {
+      const { id_token } = googleResponse.params;
+      signInWithGoogle(id_token);
     }
-  };
+  }, [googleResponse]);
+
+  // const googleRegister = async () => {
+  //   try {
+  //     const response = await googlePromptAsync();
+  //     if (response.type === 'success') {
+  //       const { id_token } = response.params;
+  //       const user = await googleLoginOrRegister(id_token);
+  //       if (user) {
+  //         setUser(user);
+  //       }
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
   return (
     <AuthContext.Provider
@@ -94,7 +122,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         setLoading,
         accessToken,
         setAccessToken,
-        googleRegister,
+        googleAuth,
         setUser,
       }}
     >

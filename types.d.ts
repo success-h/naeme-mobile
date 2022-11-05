@@ -12,17 +12,10 @@ import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
+import { EventDataTypes } from './typings';
 
 export type AuthRootStackParamList = {
   SignIn: undefined;
-};
-
-export type HomeRootStackParamList = {
-  Main: NavigatorScreenParams<RootTabParamList> | undefined;
-  EditEventModal: DataProps;
-  PaymentModal: undefined;
-  Detail: DataProps;
-  NotFound: undefined;
 };
 
 export type RootTabParamList = {
@@ -32,31 +25,29 @@ export type RootTabParamList = {
   Scan: undefined;
 };
 
-export type RootStackScreenProps<Screen extends keyof HomeRootStackParamList> =
-  NativeStackScreenProps<HomeRootStackParamList, Screen>;
-
-export type HomeStackScreenProps<Screen extends keyof HomeRootStackParamList> =
-  NativeStackScreenProps<HomeRootStackParamList, Screen>;
+export type RootStackParamList = {
+  Main: NavigatorScreenParams<RootTabParamList> | undefined;
+  EditEventModal: EventDataTypes;
+  PaymentModal: undefined;
+  Detail: EventDataTypes;
+  NotFound: undefined;
+};
 
 export type AuthStackScreenProps<Screen extends keyof AuthRootStackParamList> =
   NativeStackScreenProps<AuthRootStackParamList, Screen>;
 
-export type CompositeRootProps = CompositeScreenProps<
-  BottomTabScreenProps<RootTabParamList>,
-  NativeStackScreenProps<HomeRootStackParamList>
->;
-
-export type NavigationProps<T extends keyof HomeRootStackParamList> = {
-  navigation: NativeStackNavigationProp<HomeRootStackParamList, T>;
-  route: RouteProp<HomeRootStackParamList, T>;
+export type RootStackScreenProps<T extends keyof RootStackParamList> = {
+  navigation: NativeStackNavigationProp<RootStackParamList, T>;
+  route: RouteProp<RootStackParamList, T>;
 };
 
-export type AuthNavigationProps<T extends keyof HomeRootStackParamList> = {
-  navigation: NativeStackNavigationProp<AuthRootStackParamList, T>;
-  route: RouteProp<AuthRootStackParamList, T>;
+export type TabScreenProps<T extends keyof RootTabParamList> = {
+  navigation: NativeStackNavigationProp<RootTabParamList, T>;
+  route: RouteProp<RootTabParamList, T>;
 };
 
-export type ModalScreenProps<T extends keyof HomeRootStackParamList> = {
-  navigation: NativeStackNavigationProp<HomeRootStackParamList, T>;
-  route: RouteProp<HomeRootStackParamList, T>;
-};
+export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
+  CompositeScreenProps<
+    BottomTabScreenProps<RootTabParamList, Screen>,
+    NativeStackScreenProps<RootStackParamList>
+  >;

@@ -1,6 +1,10 @@
 import { Text, TouchableOpacity, View } from 'react-native';
+import { RootTabScreenProps } from '../../types';
 
-export default function TicketScreen({}) {
+export default function TicketScreen({
+  navigation,
+  route,
+}: RootTabScreenProps<'Ticket'>) {
   return (
     <View>
       <Text>This screen is for ticket</Text>

@@ -1,19 +1,23 @@
-import { useLayoutEffect } from "react";
-import { Platform, Text, View } from "react-native";
-import { ModalScreenProps } from "../types";
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useLayoutEffect } from 'react';
+import { Platform, Text, View } from 'react-native';
+import { RootStackScreenProps } from '../types';
 
 export default function EditEventModal({
   navigation,
   route,
-}: ModalScreenProps<"EditEventModal">) {
+}: RootStackScreenProps<'EditEventModal'>) {
   useLayoutEffect(() => {
-    navigation.setOptions({ headerTitle: `${route.params.data.title}` });
+    navigation.setOptions({ headerTitle: `${route.params.title}` });
   }, []);
 
   return (
     <View>
       <Text>Modal</Text>
-      <View />
+      <View>
+        <Text></Text>
+      </View>
     </View>
   );
 }

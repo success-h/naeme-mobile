@@ -1,8 +1,8 @@
 import { View, Text, TouchableOpacity, Platform, Animated } from 'react-native';
 import React, { useState, useRef } from 'react';
-import { HomeStackScreenProps } from '../types';
+import { RootStackScreenProps } from '../types';
 import { FontAwesome } from '@expo/vector-icons';
-import Details from '../components/event/Details';
+import Details from '../components/Details';
 import { Entypo, AntDesign } from '@expo/vector-icons';
 
 export const BANNER_H = 420;
@@ -11,11 +11,13 @@ export const TOPNAVI_H = 0;
 export default function DetailScreen({
   navigation,
   route,
-}: HomeStackScreenProps<'Detail'>) {
+}: RootStackScreenProps<'Detail'>) {
   const scrollA = useRef(new Animated.Value(0)).current;
 
+  const data = route.params;
+
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1">
       <Animated.ScrollView
         stickyHeaderIndices={[1]}
         scrollEventThrottle={16}
@@ -25,25 +27,25 @@ export default function DetailScreen({
         )}
         showsVerticalScrollIndicator={false}
       >
+        {/*// @ts-ignore */}
         <View style={styles.bannerContainer}>
           <Animated.Image
             style={styles.banner(scrollA)}
-            source={{ uri: route.params.data?.image }}
+            source={{ uri: data.image }}
             resizeMode="cover"
           />
         </View>
 
-        <Details data={route.params.data} />
+        <Details {...data} />
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('EditEventModal', { data: route.params.data })
-          }
+          onPress={() => navigation.navigate('EditEventModal', { ...data })}
           className={` ${
             Platform.OS === 'ios' ? 'top-4' : 'top-12'
           } bg-[#f7f7f7] shadow-sm shadow-gray-500 z-30 absolute rounded-full right-5 items-center p-2`}
         >
           <Entypo name="edit" size={17} color="#181818" />
         </TouchableOpacity>
+        <View className="" />
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           className={` ${

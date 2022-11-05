@@ -7,23 +7,27 @@ import {
   Animated,
   ScrollView,
 } from 'react-native';
-import React, { ReactElement, ReactNode, useEffect, useState } from 'react';
+import React, {
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { HomeRootStackParamList, HomeStackScreenProps } from '../../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import moment from 'moment';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { formatTime } from '../../Utils/formatter';
-import { useEventContext } from '../../hooks/useEvent';
 import axios from 'axios';
-import { serverUrl } from '../../constants/credentials';
-import { useAuthContext } from '../../hooks/useAuth';
-import { DataProps, EventProps } from '../../typings';
+import { useAuthContext } from '../hooks/useAuth';
+import { useEventContext } from '../hooks/useEvent';
+import { RootStackParamList } from '../types';
+import { EventDataTypes } from '../typings';
 
 export type useNavigationProps = NativeStackNavigationProp<
-  HomeRootStackParamList,
+  RootStackParamList,
   'Detail'
 >;
 
@@ -31,30 +35,18 @@ export default function FeaturedEvent() {
   const navigation = useNavigation<useNavigationProps>();
   const [loading, setLoading] = useState(true);
   const { user } = useAuthContext();
-  const { fetchFeatured, featuredEvent } = useEventContext();
-  console.log(featuredEvent);
+  const [like, setLike] = useState(false);
+  const { fetchData } = useEventContext();
+  const [featuredEvent, setFeaturedEvent] = useState<EventDataTypes[]>([]);
 
-  const likeEvent = async (liked: boolean, id: string) => {
-    console.log(liked);
-    const formData = new FormData();
-    if (liked === true) {
-      formData.append('liked', false);
-    } else {
-      formData.append('liked', true);
-    }
-    const response = await axios.put(
-      `https://naeme-api.herokuapp.com/api/events/${id}`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          Authorization: `Bearer ${user.tokens.access}`,
-        },
-      }
-    );
-    console.log('likeresponse', response);
-  };
+  useLayoutEffect(() => {
+    (async () => {
+      const EventData: EventDataTypes[] = await fetchData(
+        'https://naeme-api.herokuapp.com/api/events/?featured=true'
+      );
+      setFeaturedEvent(EventData);
+    })();
+  }, []);
 
   return (
     <View>
@@ -65,13 +57,13 @@ export default function FeaturedEvent() {
         style={{ paddingVertical: 20 }}
         className=""
       >
-        {featuredEvent.map((data) => {
+        {featuredEvent?.map((data: EventDataTypes) => {
           const month = moment(data.start_date).format('MMM');
           const day = moment(data.start_date).format('DD');
           return (
             <Pressable
               key={data.id}
-              onPress={() => navigation.navigate('Detail', { data })}
+              onPress={() => navigation.navigate('Detail', { ...data })}
               className=" mx-3 rounded-3xl bg-white w-[270px] h-[254px]"
             >
               <View className="shadow-md">
@@ -106,8 +98,7 @@ export default function FeaturedEvent() {
                   <TouchableOpacity
                     activeOpacity={0.2}
                     onPress={() => {
-                      console.log(data.liked);
-                      // likeEvent(data.liked, data.id);
+                      setLike(!like);
                     }}
                   >
                     {data.liked === true ? (

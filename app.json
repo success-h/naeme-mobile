@@ -4,7 +4,7 @@
     "slug": "naeme-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "naememobile",
+    "scheme": "com.successhy.naememobile",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -17,7 +17,8 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.successhy.naememobile"
     },
     "android": {
       "adaptiveIcon": {
