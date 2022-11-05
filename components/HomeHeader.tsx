@@ -54,7 +54,7 @@ export function Header({ headerStyle, locationStyle }: StyleProps) {
         <View>
           <Text className={`font-bold ${headerStyle}`}>{user?.username}</Text>
           <View className="flex-row items-center mb-3 mt-3">
-            <EvilIcons name="location" size={18} color="#ff8989" />
+            <EvilIcons name="location" size={18} color="#fd6e6e" />
             {location.city && (
               <Text className={`${locationStyle} text-start`}>
                 {location.city}, {location.country}
@@ -65,7 +65,7 @@ export function Header({ headerStyle, locationStyle }: StyleProps) {
         <View className="gap-2">
           <TouchableOpacity
             onPress={() => navigation.navigate('User')}
-            className="w-[60px] h-[60px] text-[#ff8989] "
+            className="w-[60px] h-[60px] text-[#fd6e6e] "
           >
             <Image
               source={{ uri: user.image }}

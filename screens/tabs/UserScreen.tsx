@@ -1,3 +1,4 @@
+import { BlurView } from 'expo-blur';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import {
   FlatList,
@@ -16,6 +17,7 @@ import EventCard from '../../components/EventCard';
 import FeaturedEvent from '../../components/FeaturedEvent';
 import HomeHeader, { Header } from '../../components/HomeHeader';
 import { Loader } from '../../components/Loader';
+import MyTicket from '../../components/MyTicket';
 import MyStatusBar from '../../components/StatusBar';
 import StatusBar from '../../components/StatusBar';
 import { useAuthContext } from '../../hooks/useAuth';
@@ -37,7 +39,7 @@ export default function UserScreen({
 
   const Url = `https://naeme-api.herokuapp.com/api/events/?owner=${user.id}`;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     (async () => {
       const events: EventDataTypes[] = await fetchData(Url);
       setMyEvent(events);
@@ -45,21 +47,30 @@ export default function UserScreen({
   }, []);
 
   return (
-    <View className="bg-slate-100">
+    <View className="bg-gray-100">
       <MyStatusBar android="dark" ios="dark" />
       <Header
         locationStyle="text-gray-700 ml-1"
         headerStyle="text-gray-700 text-xl"
       />
 
-      <View>
-        <Text>Tract your events progress and see event statistics</Text>
+      <View className="ml-4" style={{}}>
+        <Text
+          style={{ fontFamily: 'open-sans-bold' }}
+          className="text-3xl mb-1"
+        >
+          My Events
+        </Text>
+        <Text className="text-gray-500">
+          Tract your events progress and see event statistics
+        </Text>
       </View>
       <FlatList
         // contentContainerStyle={{ paddingBottom: 220 }}
+        showsHorizontalScrollIndicator={false}
         data={myEvent}
         renderItem={({ item }: { item: EventDataTypes }) => {
-          return <EventCard {...item} />;
+          return <MyTicket {...item} />;
         }}
         keyExtractor={(item) => item.id}
         horizontal={true}
@@ -69,6 +80,16 @@ export default function UserScreen({
           <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
         }
       />
+      <View className="mx-4 mt-4 flex-row justify-between">
+        <TouchableOpacity className="py-3 shadow-lg rounded-xl px-5 bg-black">
+          <Text style={{ fontFamily: 'open-sans-bold' }} className="text-white">
+            Verify Ticket
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity className="py-3 rounded-xl px-5 bg-slate-100 shadow-lg">
+          <Text style={{ fontFamily: 'open-sans-bold' }}>Create New Event</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

@@ -26,7 +26,7 @@ function HomeNavigator() {
         <Stack.Screen
           name="Detail"
           component={DetailScreen}
-          options={{ headerShown: false, presentation: 'fullScreenModal' }}
+          options={{ headerShown: false, presentation: 'modal' }}
         />
         <Stack.Screen name="EditEventModal" component={EditEventModal} />
       </Stack.Group>
