@@ -1,9 +1,9 @@
-import { FontAwesome } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
-import Entypo from '@expo/vector-icons/Entypo';
-import { useFonts } from 'expo-font';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { User } from '../typings';
 
 type Fonts = {
   'open-sans-bold': string;
@@ -12,30 +12,54 @@ type Fonts = {
   'open-sans-semi': string;
 };
 
+export interface TokensType {
+  access: string;
+  refresh: string;
+}
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
+
+  const url = 'https://naeme-api.herokuapp.com/api/token/refresh/';
+  const checkLoginCredentials = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('naemeUser');
+      const tokens: TokensType =
+        jsonValue != null ? JSON.parse(jsonValue) : null;
+
+      if (tokens.access) {
+        axios
+          .post(url, {
+            refresh: tokens.refresh,
+          })
+          .then((response) => {
+            const jsonValue = JSON.stringify(response.data);
+            AsyncStorage.setItem('naemeUser', jsonValue)
+              .then(() => {})
+              .catch((e) => console.log(e));
+            return response.data;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
 
   useEffect(() => {
     async function loadResourcesAndDataAsync() {
       try {
         SplashScreen.preventAutoHideAsync();
-
-        // const [fontsLoaded] = useFonts({
-        //   'open-sans-bold': require('../assets/fonts/OpenSans-Bold.ttf'),
-        //   'open-sans-medium': require('../assets/fonts/OpenSans-Medium.ttf'),
-        //   'open-sans-regular': require('../assets/fonts/OpenSans-Regular.ttf'),
-        //   'open-sans-semi': require('../assets/fonts/OpenSans-SemiBold.ttf'),
-        // });
+        await checkLoginCredentials();
         await Font.loadAsync({
           'open-sans-bold': require('../assets/fonts/OpenSans-Bold.ttf'),
           'open-sans-medium': require('../assets/fonts/OpenSans-Medium.ttf'),
           'open-sans-regular': require('../assets/fonts/OpenSans-Regular.ttf'),
           'open-sans-semi': require('../assets/fonts/OpenSans-SemiBold.ttf'),
         });
-        // await Font.loadAsync(Entypo.font);
       } catch (e) {
         // We might want to provide this error information to an error reporting service
-        console.warn(e);
       } finally {
         setLoadingComplete(true);
         SplashScreen.hideAsync();
@@ -45,5 +69,5 @@ export default function useCachedResources() {
     loadResourcesAndDataAsync();
   }, []);
 
-  return isLoadingComplete;
+  return { isLoadingComplete };
 }
