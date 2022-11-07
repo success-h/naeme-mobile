@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BlurView } from 'expo-blur';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import {
@@ -22,6 +23,7 @@ import MyStatusBar from '../../components/StatusBar';
 import StatusBar from '../../components/StatusBar';
 import { useAuthContext } from '../../hooks/useAuth';
 import { useEventContext } from '../../hooks/useEvent';
+import { defaultUser } from '../../Providers/AuthProvider';
 import {
   RootStackScreenProps,
   RootTabScreenProps,
@@ -33,7 +35,7 @@ export default function UserScreen({
   navigation,
   route,
 }: RootTabScreenProps<'User'>) {
-  const { user } = useAuthContext();
+  const { user, setUser } = useAuthContext();
   const { fetchData, loading, refresh, handleRefresh } = useEventContext();
   const [myEvent, setMyEvent] = useState<EventDataTypes[]>([]);
 
@@ -53,42 +55,62 @@ export default function UserScreen({
         locationStyle="text-gray-700 ml-1"
         headerStyle="text-gray-700 text-xl"
       />
-
-      <View className="ml-4" style={{}}>
-        <Text
-          style={{ fontFamily: 'open-sans-bold' }}
-          className="text-3xl mb-1"
+      <View className="-mt-3 mx-4 items-start ">
+        <TouchableOpacity
+          onPress={() => {
+            AsyncStorage.removeItem('naemeUser')
+              .then(() => {
+                setUser(defaultUser);
+              })
+              .catch((e) => console.log(e));
+          }}
+          className="px-3 py-2 bg-slate-200"
         >
-          My Events
-        </Text>
-        <Text className="text-gray-500">
-          Tract your events progress and see event statistics
-        </Text>
+          <Text>Logout</Text>
+        </TouchableOpacity>
       </View>
-      <FlatList
-        // contentContainerStyle={{ paddingBottom: 220 }}
-        showsHorizontalScrollIndicator={false}
-        data={myEvent}
-        renderItem={({ item }: { item: EventDataTypes }) => {
-          return <MyTicket {...item} />;
-        }}
-        keyExtractor={(item) => item.id}
-        horizontal={true}
-        showsVerticalScrollIndicator={false}
-        ListFooterComponent={<Loader isLoading={loading} />}
-        refreshControl={
-          <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
-        }
-      />
-      <View className="mx-4 mt-4 flex-row justify-between">
-        <TouchableOpacity className="py-3 shadow-lg rounded-xl px-5 bg-black">
-          <Text style={{ fontFamily: 'open-sans-bold' }} className="text-white">
-            Verify Ticket
+
+      <View className="mt-7">
+        <View className="flex-row mx-4 mb-2 justify-between">
+          <TouchableOpacity className="py-3 shadow-lg rounded-xl px-5 bg-white">
+            <Text
+              style={{ fontFamily: 'open-sans-bold' }}
+              className="text-black text-xs"
+            >
+              Verify Ticket
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity className="py-3 rounded-xl px-5 bg-white shadow-lg">
+            <Text style={{ fontFamily: 'open-sans-bold' }} className="text-xs">
+              Create New Event
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{}} className="mx-4">
+          <Text
+            style={{ fontFamily: 'open-sans-bold' }}
+            className="text-xl my-2"
+          >
+            My Events
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="py-3 rounded-xl px-5 bg-slate-100 shadow-lg">
-          <Text style={{ fontFamily: 'open-sans-bold' }}>Create New Event</Text>
-        </TouchableOpacity>
+          <Text className="text-gray-500">
+            Tract your events progress and see event statistics
+          </Text>
+        </View>
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          data={myEvent}
+          renderItem={({ item }: { item: EventDataTypes }) => {
+            return <MyTicket {...item} />;
+          }}
+          keyExtractor={(item) => item.id}
+          horizontal={true}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={<Loader isLoading={loading} />}
+          refreshControl={
+            <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
+          }
+        />
       </View>
     </View>
   );
