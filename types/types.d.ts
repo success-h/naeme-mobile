@@ -12,7 +12,7 @@ import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import { EventDataTypes } from './typings';
+import { EventDataTypes, User } from './typings';
 
 export type AuthRootStackParamList = {
   SignIn: undefined;
@@ -30,6 +30,7 @@ export type RootStackParamList = {
   EditEventModal: EventDataTypes;
   PaymentModal: undefined;
   Detail: EventDataTypes;
+  CreateEvent: User;
   NotFound: undefined;
 };
 

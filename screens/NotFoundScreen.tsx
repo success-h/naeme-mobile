@@ -1,15 +1,15 @@
 import { Text, TouchableOpacity, View } from 'react-native';
-
-import { HomeStackScreenProps } from '../types';
+import { MyText } from '../components/AppText';
+import { RootStackScreenProps } from '../types/types';
 
 export default function NotFoundScreen({
   navigation,
-}: HomeStackScreenProps<'NotFound'>) {
+}: RootStackScreenProps<'NotFound'>) {
   return (
     <View>
-      <Text>This screen doesn't exist.</Text>
-      <TouchableOpacity>
-        <Text>Go to home screen!</Text>
+      <MyText style="">This screen doesn't exist.</MyText>
+      <TouchableOpacity onPress={() => navigation.navigate('Main')}>
+        <MyText style="">Go to home screen!</MyText>
       </TouchableOpacity>
     </View>
   );

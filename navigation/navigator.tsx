@@ -3,11 +3,8 @@ import { useAuthContext } from '../hooks/useAuth';
 import LinkingConfiguration from './LinkingConfiguration';
 import AuthNavigator from './authStackNavigation';
 import HomeNavigator from './HomeStackNavigation';
-import * as Updates from 'expo-updates';
 
-import { ReactNode, useEffect, useLayoutEffect, useState } from 'react';
 import useCachedResources from '../hooks/useCachedResources';
-import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SplashScreen from '../components/SplashScreen';
 

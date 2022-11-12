@@ -1,8 +1,6 @@
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLayoutEffect } from 'react';
 import { Platform, Text, View } from 'react-native';
-import { RootStackScreenProps } from '../types';
+import { RootStackScreenProps } from '../types/types';
 
 export default function EditEventModal({
   navigation,
@@ -15,9 +13,7 @@ export default function EditEventModal({
   return (
     <View>
       <Text>Modal</Text>
-      <View>
-        <Text></Text>
-      </View>
+      <View></View>
     </View>
   );
 }

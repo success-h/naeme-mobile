@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   Pressable,
   Image,
   TouchableOpacity,
@@ -13,9 +12,10 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import moment from 'moment';
 import { Ionicons } from '@expo/vector-icons';
-import { RootStackParamList } from '../types';
-import { EventDataTypes } from '../typings';
+import { RootStackParamList } from '../types/types';
+import { EventDataTypes } from '../types/typings';
 import { useEventContext } from '../hooks/useEvent';
+import { MyText } from './AppText';
 
 export type useNavigationProps = NativeStackNavigationProp<
   RootStackParamList,
@@ -25,11 +25,12 @@ export type useNavigationProps = NativeStackNavigationProp<
 export default function EventCard(props: EventDataTypes) {
   const navigation = useNavigation<useNavigationProps>();
   const { like, setLike, location } = useEventContext();
-  const month = moment(props.start_date).format('MMM');
-  const day = moment(props.start_date).format('DD');
+  const month = moment(props.date).format('MMM');
+  const day = moment(props.date).format('DD');
 
   return (
-    <Pressable
+    <TouchableOpacity
+      activeOpacity={0.6}
       onPress={() => navigation.navigate('Detail', { ...props })}
       className="bg-white my-7 mx-3 rounded-2xl shadow-sm shadow-gray-200"
     >
@@ -41,8 +42,8 @@ export default function EventCard(props: EventDataTypes) {
             source={{ uri: props.image }}
           />
           <View className="mt-2  items-center p-2 ml-4 absolute shadow-sm shadow-gray-300 bg-white z-30 bottom-3 rounded-xl w-14">
-            <Text className="text-[20px] font-bold text-rose-500">{month}</Text>
-            <Text className="text-[13px] -mt-1 leading-4">{day}</Text>
+            <MyText style="text-[20px] font-bold text-rose-500">{month}</MyText>
+            <MyText style="text-[13px] -mt-1 leading-4">{day}</MyText>
           </View>
 
           <View className="mt-2  items-center p-2 ml-4 absolute shadow-sm shadow-gray-300 bg-white z-30 top-3 right-3 rounded-xl">
@@ -61,37 +62,39 @@ export default function EventCard(props: EventDataTypes) {
 
           {props.sold_ticket_count === null ? (
             <View className="right-3 bottom-3 absolute bg-gray-50 px-1 rounded-full">
-              <Text>0 SOLD</Text>
+              <MyText style="">0 SOLD</MyText>
             </View>
           ) : (
             <View className="right-3 bottom-3 absolute bg-gray-50 px-1 rounded-full">
-              <Text>{props.sold_ticket_count} SOLD</Text>
+              <MyText style="">{props.sold_ticket_count} SOLD</MyText>
             </View>
           )}
         </View>
         <View className="w-full p-4 bg-white">
           <View className="flex-row justify-between">
-            <Text className="font-bold text-xl">{props.title}</Text>
+            <MyText textStyle="open-sans-bold" style="text-xl">
+              {props.title}
+            </MyText>
           </View>
 
           <View className="w-full">
             {props.lowest_price ? (
-              <Text className="left-3 bottom-3 absolute bg-gray-200 px-1 rounded-full">
+              <MyText style="left-3 bottom-3 absolute bg-gray-200 px-1 rounded-full">
                 ${props.lowest_price}
-              </Text>
+              </MyText>
             ) : (
-              <Text className="bottom-3 absolute rounded-full">$0.00</Text>
+              <MyText style="bottom-3 absolute rounded-full">$0.00</MyText>
             )}
 
             <TouchableOpacity
               onPress={() => navigation.navigate('Detail', { ...props })}
               className="self-end py-3 px-5 rounded-2xl text-sm font-bold bg-black"
             >
-              <Text className="text-white">Get ticket</Text>
+              <MyText style="text-white">Get ticket</MyText>
             </TouchableOpacity>
           </View>
         </View>
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 }

@@ -1,7 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   Platform,
@@ -12,15 +15,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import NotFound from '../../components/Empty';
-import EventCard from '../../components/EventCard';
-import FeaturedEvent from '../../components/FeaturedEvent';
-import HomeHeader, { Header } from '../../components/HomeHeader';
-import { Loader } from '../../components/Loader';
-import MyTicket from '../../components/MyTicket';
-import MyStatusBar from '../../components/StatusBar';
-import StatusBar from '../../components/StatusBar';
+import { MyText } from '../../components/AppText';
+
+import { Loader, MyEventLoaderScreen } from '../../components/Loader';
+import MyEvent from '../../components/MyEvent';
 import { useAuthContext } from '../../hooks/useAuth';
 import { useEventContext } from '../../hooks/useEvent';
 import { defaultUser } from '../../Providers/AuthProvider';
@@ -28,91 +26,111 @@ import {
   RootStackScreenProps,
   RootTabScreenProps,
   TabScreenProps,
-} from '../../types';
-import { EventDataTypes } from '../../typings';
+} from '../../types/types';
+import { EventDataTypes } from '../../types/typings';
 
 export default function UserScreen({
   navigation,
   route,
 }: RootTabScreenProps<'User'>) {
   const { user, setUser } = useAuthContext();
-  const { fetchData, loading, refresh, handleRefresh } = useEventContext();
+  const { fetchData, loading, setLoading, refresh, handleRefresh } =
+    useEventContext();
   const [myEvent, setMyEvent] = useState<EventDataTypes[]>([]);
+  const [logoutLoading, setlogoutLoading] = useState(false);
+  const [listLoading, setListLoading] = useState(false);
+
+  console.log('Loading', loading);
 
   const Url = `https://naeme-api.herokuapp.com/api/events/?owner=${user.id}`;
 
   useLayoutEffect(() => {
     (async () => {
+      setListLoading(true);
       const events: EventDataTypes[] = await fetchData(Url);
       setMyEvent(events);
+      setListLoading(false);
     })();
   }, []);
 
   return (
-    <View className="bg-gray-100">
-      <MyStatusBar android="dark" ios="dark" />
-      <Header
-        locationStyle="text-gray-700 ml-1"
-        headerStyle="text-gray-700 text-xl"
-      />
-      <View className="-mt-3 mx-4 items-start ">
-        <TouchableOpacity
-          onPress={() => {
-            AsyncStorage.removeItem('naemeUser')
-              .then(() => {
-                setUser(defaultUser);
-              })
-              .catch((e) => console.log(e));
-          }}
-          className="px-3 py-2 bg-slate-200"
-        >
-          <Text>Logout</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View className="mt-7">
-        <View className="flex-row mx-4 mb-2 justify-between">
-          <TouchableOpacity className="py-3 shadow-lg rounded-xl px-5 bg-white">
-            <Text
-              style={{ fontFamily: 'open-sans-bold' }}
-              className="text-black text-xs"
-            >
-              Verify Ticket
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="py-3 rounded-xl px-5 bg-white shadow-lg">
-            <Text style={{ fontFamily: 'open-sans-bold' }} className="text-xs">
-              Create New Event
-            </Text>
+    <LinearGradient colors={['#fff', '#fff', '#eee']} className="flex-1">
+      <StatusBar animated={true} style="light" />
+      <LinearGradient
+        colors={['#070708', '#272b31']}
+        className="pt-20 pb-4 px-4 items-center bg-rose-100 flex-row justify-between rounded-b-3xl shadow-lg"
+      >
+        <View>
+          <Text className="text-md font-bold text-[#a9a9a9]">Hello</Text>
+          <Text className="text-xl font-bold text-[#faf8f8]">
+            {user.username}
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              setlogoutLoading(true);
+              setTimeout(() => {
+                AsyncStorage.removeItem('naemeUser')
+                  .then(() => {
+                    setUser(defaultUser);
+                  })
+                  .catch((e) => console.log(e));
+                setlogoutLoading(false);
+              }, 2000);
+            }}
+            className="px-3 mt-3 py-1 w-[73px] rounded-2xl  border border-white"
+          >
+            {logoutLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text className="text-white">Logout</Text>
+            )}
           </TouchableOpacity>
         </View>
-        <View style={{}} className="mx-4">
+        <View className="items-end">
+          <Image
+            source={{ uri: user.image }}
+            className="w-[60px] h-[60px] -mt-7 rounded-full border-[#fdb4b4] border"
+            resizeMode="contain"
+          />
+          <TouchableOpacity
+            className="bg-slate-700 px-2 py-1 -mb-2 mt-4 rounded-xl"
+            onPress={() => navigation.navigate('CreateEvent', { ...user })}
+          >
+            <MyText textStyle="open-sans-bold" style="text-white">
+              Create Event
+            </MyText>
+          </TouchableOpacity>
+        </View>
+      </LinearGradient>
+
+      <View className="mt-4">
+        <View style={{}} className="mx-4 mb-6">
           <Text
             style={{ fontFamily: 'open-sans-bold' }}
             className="text-xl my-2"
           >
             My Events
           </Text>
-          <Text className="text-gray-500">
-            Tract your events progress and see event statistics
-          </Text>
+          <Text className="text-gray-500">See events created by you.</Text>
         </View>
         <FlatList
           showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 300 }}
           data={myEvent}
           renderItem={({ item }: { item: EventDataTypes }) => {
-            return <MyTicket {...item} />;
+            return <MyEvent {...item} />;
           }}
           keyExtractor={(item) => item.id}
-          horizontal={true}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={<Loader isLoading={loading} />}
+          ListEmptyComponent={<MyEventLoaderScreen isLoading={listLoading} />}
           refreshControl={
             <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
           }
         />
       </View>
-    </View>
+    </LinearGradient>
   );
 }
-//  style={{ fontFamily: 'open-sans-bold' }
+
+// d73717;

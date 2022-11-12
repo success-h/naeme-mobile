@@ -8,8 +8,6 @@ import React, {
   useLayoutEffect,
   useState,
 } from 'react';
-import { EventDataTypes, ResponseType } from '../typings';
-
 interface EventCartContextType {
   loading: boolean;
   setLoading(value: boolean): void;
@@ -29,6 +27,7 @@ interface EventCartContextType {
   setLike: React.Dispatch<React.SetStateAction<boolean>>;
   featuredEvent: EventDataTypes[];
   setFeaturedEvent: React.Dispatch<React.SetStateAction<EventDataTypes[]>>;
+  searching: boolean;
 }
 
 type LocationType = {
@@ -37,6 +36,9 @@ type LocationType = {
 };
 
 export const EventContext = createContext({} as EventCartContextType);
+
+import { serverUrl } from '@env';
+import { EventDataTypes, ResponseType } from '../types/typings';
 
 export default function EventProvider({ children }: { children: ReactNode }) {
   const [featuredEvent, setFeaturedEvent] = useState<EventDataTypes[]>([]);
@@ -78,8 +80,6 @@ export default function EventProvider({ children }: { children: ReactNode }) {
         }
         setPreviousPage(data.previous);
         setNextPage(data?.next);
-        // if (data.next !== null) {
-        // }
         setLoading(false);
       }
     } catch (e) {
@@ -88,7 +88,7 @@ export default function EventProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const Url = 'https://naeme-api.herokuapp.com/api/events';
+  const Url = `${serverUrl}/events`;
 
   const fetchData = async (url: any) => {
     setSearching(false);
@@ -150,6 +150,7 @@ export default function EventProvider({ children }: { children: ReactNode }) {
         refresh,
         handleRefresh,
         setSearching,
+        searching,
         setTextState,
         textState,
         like,

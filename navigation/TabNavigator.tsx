@@ -5,7 +5,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useLayoutEffect } from 'react';
 import { Icon } from '@rneui/themed';
-import { RootTabParamList } from '../types';
+import { RootTabParamList } from '../types/types';
 import HomeScreen from '../screens/tabs/HomeScreen';
 import TicketScreen from '../screens/tabs/TicketScreen';
 import ScannerScreen from '../screens/tabs/ScanScreen';
@@ -30,8 +30,10 @@ export default function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarActiveTintColor: '#f786ad',
         headerShown: false,
+        tabBarStyle: {
+          backgroundColor: '#060707',
+        },
         tabBarShowLabel: false,
         tabBarInactiveTintColor: '#dddddd',
         tabBarIcon: ({ focused, color, size }) => {
@@ -40,7 +42,7 @@ export default function TabNavigator() {
               <Feather
                 name="home"
                 size={24}
-                color={focused ? '#f786ad' : '#dddddd'}
+                color={focused ? '#fc3c44' : '#dddddd'}
               />
             );
           } else if (route.name === 'Ticket') {
@@ -48,7 +50,7 @@ export default function TabNavigator() {
               <MaterialCommunityIcons
                 name="ticket-confirmation-outline"
                 size={24}
-                color={focused ? '#f786ad' : '#dddddd'}
+                color={focused ? '#fc3c44' : '#dddddd'}
               />
             );
           } else if (route.name === 'Scan') {
@@ -56,7 +58,7 @@ export default function TabNavigator() {
               <MaterialIcons
                 name="qr-code"
                 size={24}
-                color={focused ? '#f786ad' : '#dddddd'}
+                color={focused ? '#fc3c44' : '#dddddd'}
               />
             );
           } else if (route.name === 'User') {
@@ -64,7 +66,7 @@ export default function TabNavigator() {
               <AntDesign
                 name="user"
                 size={24}
-                color={focused ? '#f786ad' : '#dddddd'}
+                color={focused ? '#fc3c44' : '#dddddd'}
               />
             );
           }

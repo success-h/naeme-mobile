@@ -1,4 +1,4 @@
-export const serverUrl = 'https://naeme-api.herokuapp.com/api';
+import { serverUrl } from '@env';
 
 export const iosGoogleCliendId =
   '919602408222-i4d57mcd3qke3g6q622v6unmq0vo8gd2.apps.googleusercontent.com';

@@ -1,4 +1,5 @@
-import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Platform, TouchableOpacity, View } from 'react-native';
+import { MyText } from '../components/AppText';
 import { useAuthContext } from '../hooks/useAuth';
 
 export default function SignIn({}) {
@@ -8,12 +9,15 @@ export default function SignIn({}) {
   return (
     <View className="bg-white w-full flex-1 justify-center items-center">
       <View className="-mt-32 mb-6">
-        <Text className="text-3xl text-center font-bold">
+        <MyText textStyle="open-sans-bold" style="text-3xl text-center">
           Book Your Tickets
-        </Text>
-        <Text className="text-center text-red-400 text-3xl font-bold">
+        </MyText>
+        <MyText
+          textStyle="open-sans-bold"
+          style="text-center text-red-400 text-3xl font-bold"
+        >
           Seamlessly.
-        </Text>
+        </MyText>
       </View>
       <View className="w-[350px] z-10 h-[350px]">
         <Image
@@ -25,13 +29,19 @@ export default function SignIn({}) {
         />
       </View>
       <View className="h-80 bg-slate-200 rounded-full -mt-80 w-80" />
-      <Text className="text-lg leading-5 px-10 text-center font-semibold text mt-4">
+      <MyText
+        textStyle="open-sans-medium"
+        style="text-lg leading-5 px-10 text-center text mt-4"
+      >
         Discover amazing events happening around you!
-      </Text>
+      </MyText>
       <View className="items-center absolute bottom-0 mb-28">
-        <Text className="text-sm px-7 mb-3 text-gray-700 mt-1 text-center font-semibold text">
+        <MyText
+          textStyle="open-sans-bold"
+          style="text-sm px-7 mb-3 text-gray-700 mt-1 text-center text"
+        >
           lets get you started with your account
-        </Text>
+        </MyText>
         <View className="flex-row gap-10 items-start justify-between">
           <TouchableOpacity
             onPress={() => googleAuth()}

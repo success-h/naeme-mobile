@@ -18,7 +18,7 @@ import {
 } from '../constants/credentials';
 import { TokensType } from '../hooks/useCachedResources';
 import { googleLoginOrRegister } from '../service/user';
-import { User } from '../typings';
+import { User } from '../types/typings';
 
 interface AuthProviderProps {
   user: User;
@@ -77,8 +77,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     androidClientId: androidGoogleCliendId,
     selectAccount: true,
   });
-
-  console.log({ user, setUser });
 
   useEffect(() => {
     if (!user?.email) {

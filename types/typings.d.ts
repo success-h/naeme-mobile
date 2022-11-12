@@ -20,7 +20,7 @@ interface EventDataTypes {
     event_admin: string;
     used: boolean;
     quantity: number;
-    end_date: string;
+    date: string;
     start_time: string;
     end_time: string;
     facebook: string;
@@ -33,8 +33,8 @@ interface EventDataTypes {
   description: string;
   image: string;
   location: string;
-  start_date: string;
-  end_date: string;
+  date: string;
+  participants: number;
   start_time: string;
   end_time: string;
   liked: boolean;
@@ -46,11 +46,35 @@ interface EventDataTypes {
   sold_ticket_count: number;
 }
 
+export interface TicketDataTypes {
+  price: number;
+  event: StringOrNull;
+  event_name: StringOrNull;
+  title: StringOrNull;
+  ticket: StringOrNull;
+  user: StringOrNull;
+  event_admin: string;
+  used: boolean;
+  quantity: number;
+  date: StringOrNull;
+  start_time: StringOrNull;
+  end_time: StringOrNull;
+  id: string;
+  qr_code: StringOrNull;
+}
+
 export type ResponseType = {
   count: number | null;
   next: StringOrNull;
   previous: StringOrNull;
   results: EventDataTypes[];
+};
+
+export type TicketResponseType = {
+  count: number | null;
+  next: StringOrNull;
+  previous: StringOrNull;
+  results: TicketDataTypes[];
 };
 
 type StringOrNull = string | null;

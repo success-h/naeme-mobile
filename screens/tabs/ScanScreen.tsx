@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from 'react-native';
-import { RootTabScreenProps } from '../../types';
+import { RootTabScreenProps } from '../../types/types';
 
 export default function ScannerScreen({
   navigation,

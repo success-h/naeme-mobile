@@ -1,9 +1,18 @@
-import { View, Text, TouchableOpacity, Platform, Animated } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Platform,
+  Animated,
+  Pressable,
+} from 'react-native';
 import React, { useState, useRef } from 'react';
-import { RootStackScreenProps } from '../types';
+import { RootStackScreenProps } from '../types/types';
 import { FontAwesome } from '@expo/vector-icons';
 import Details from '../components/Details';
 import { Entypo, AntDesign } from '@expo/vector-icons';
+import { useAuthContext } from '../hooks/useAuth';
+import { MyText } from '../components/AppText';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export const BANNER_H = 420;
 export const TOPNAVI_H = 0;
@@ -14,10 +23,27 @@ export default function DetailScreen({
 }: RootStackScreenProps<'Detail'>) {
   const scrollA = useRef(new Animated.Value(0)).current;
 
+  const { user } = useAuthContext();
+
   const data = route.params;
 
   return (
-    <View className="flex-1">
+    <LinearGradient
+      colors={['#0f0f15', '#272b31']}
+      start={{ x: 0.9, y: 0.4 }}
+      className="flex-1"
+    >
+      <View className="w-full absolute bottom-0 py-4 mb-2 items-center z-10">
+        <Pressable className="bg-[#eeeeee] flex-row px-20 py-3 rounded-xl shadow-md w-3/5 mx-auto">
+          <MyText
+            textStyle="open-sans-bold"
+            style="text-[#f94c57] text-md mr-2"
+          >
+            Book Now
+          </MyText>
+          <FontAwesome name="ticket" size={16} color="#f94c57" />
+        </Pressable>
+      </View>
       <Animated.ScrollView
         stickyHeaderIndices={[1]}
         scrollEventThrottle={16}
@@ -37,34 +63,27 @@ export default function DetailScreen({
         </View>
 
         <Details {...data} />
-        <TouchableOpacity
-          onPress={() => navigation.navigate('EditEventModal', { ...data })}
-          className={` ${
-            Platform.OS === 'ios' ? 'top-4' : 'top-12'
-          } bg-[#f7f7f7] shadow-sm shadow-gray-500 z-30 absolute rounded-full right-5 items-center p-2`}
-        >
-          <Entypo name="edit" size={17} color="#181818" />
-        </TouchableOpacity>
+        {data.owner === user.id && (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('EditEventModal', { ...data })}
+            className={` ${
+              Platform.OS === 'ios' ? 'top-14' : 'top-12'
+            } bg-[#f7f7f7] shadow-sm shadow-gray-500 z-30 absolute rounded-full right-5 items-center p-2`}
+          >
+            <Entypo name="edit" size={17} color="#181818" />
+          </TouchableOpacity>
+        )}
         <View className="" />
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           className={` ${
-            Platform.OS === 'ios' ? 'top-4' : 'top-12'
+            Platform.OS === 'ios' ? 'top-14' : 'top-12'
           } bg-[#f7f7f7] shadow-sm shadow-gray-500 z-30 absolute rounded-full left-5 items-center p-2`}
         >
-          <AntDesign name="left" size={17} color="#181818" />
+          <AntDesign name="arrowleft" size={17} color="#181818" />
         </TouchableOpacity>
       </Animated.ScrollView>
-
-      <TouchableOpacity
-        className={`${
-          Platform.OS === 'ios' ? 'mb-7' : 'mb-3'
-        } bg-black flex-row px-20 py-3 rounded-xl shadow-md bottom-0 w-3/5 mx-auto`}
-      >
-        <Text className="text-rose-400 text-md font-bold mr-2">Book Now</Text>
-        <FontAwesome name="ticket" size={16} color="white" />
-      </TouchableOpacity>
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -94,3 +113,8 @@ const styles = {
     ],
   }),
 };
+
+// f94c57;
+// fc3c44;
+
+// c2cad7;
