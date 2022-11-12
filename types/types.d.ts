@@ -37,6 +37,9 @@ export type RootStackParamList = {
 export type AuthStackScreenProps<Screen extends keyof AuthRootStackParamList> =
   NativeStackScreenProps<AuthRootStackParamList, Screen>;
 
+export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
+  NativeStackScreenProps<RootStackParamList, Screen>;
+
 export type RootStackScreenProps<T extends keyof RootStackParamList> = {
   navigation: NativeStackNavigationProp<RootStackParamList, T>;
   route: RouteProp<RootStackParamList, T>;

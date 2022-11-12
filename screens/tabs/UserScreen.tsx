@@ -123,7 +123,9 @@ export default function UserScreen({
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={<Loader isLoading={loading} />}
-          ListEmptyComponent={<MyEventLoaderScreen isLoading={listLoading} />}
+          ListEmptyComponent={
+            <MyEventLoaderScreen title="event" isLoading={listLoading} />
+          }
           refreshControl={
             <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
           }

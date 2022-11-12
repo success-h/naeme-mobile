@@ -60,7 +60,7 @@ export interface TicketDataTypes {
   start_time: StringOrNull;
   end_time: StringOrNull;
   id: string;
-  qr_code: StringOrNull;
+  qr_code: string | undefined;
 }
 
 export type ResponseType = {

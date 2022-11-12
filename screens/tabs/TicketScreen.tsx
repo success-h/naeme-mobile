@@ -1,19 +1,34 @@
 import {
   FlatList,
   Platform,
+  Pressable,
   SafeAreaView,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { MyText } from '../../components/AppText';
-import { RootTabScreenProps } from '../../types/types';
+import {
+  RootStackParamList,
+  RootStackScreenProps,
+  RootTabScreenProps,
+  TabScreenProps,
+} from '../../types/types';
 
 import { serverUrl } from '@env';
 import axios from 'axios';
 import { useAuthContext } from '../../hooks/useAuth';
-import { useLayoutEffect, useState } from 'react';
-import { TicketDataTypes, TicketResponseType } from '../../types/typings';
+import { useEffect, useLayoutEffect, useState } from 'react';
+import {
+  EventDataTypes,
+  ResponseType,
+  TicketDataTypes,
+  TicketResponseType,
+} from '../../types/typings';
+import { MyEventLoaderScreen } from '../../components/Loader';
+import { useEventContext } from '../../hooks/useEvent';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import TicketCard from '../../components/TicketCard';
 
 export default function TicketScreen({
   navigation,
@@ -21,7 +36,8 @@ export default function TicketScreen({
 }: RootTabScreenProps<'Ticket'>) {
   const { user } = useAuthContext();
   const [tickets, setTickets] = useState<TicketDataTypes[]>([]);
-  console.log({ tickets });
+  const { loading, setLoading } = useEventContext();
+
   const fetchTickets = async () => {
     const response = await axios.get(
       `${serverUrl}/my-tickets/?user=${user.id}`
@@ -29,10 +45,12 @@ export default function TicketScreen({
     const data: TicketResponseType = await response.data;
     if (data) {
       setTickets(data.results);
+      setLoading(false);
     }
   };
 
   useLayoutEffect(() => {
+    setLoading(true);
     fetchTickets();
   }, []);
 
@@ -48,16 +66,13 @@ export default function TicketScreen({
           renderItem={({ item }): JSX.Element => <TicketCard {...item} />}
           keyExtractor={({ id }) => id}
           horizontal={true}
+          ListEmptyComponent={
+            <MyEventLoaderScreen title="ticket" isLoading={loading} />
+          }
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
         />
       </View>
     </SafeAreaView>
-  );
-}
-
-function TicketCard({ title }: TicketDataTypes) {
-  return (
-    <View className="bg-[#111115] h-[500px] mt-20 w-[310px] rounded-3xl mx-2">
-      <MyText style="text-white">{title}</MyText>
-    </View>
   );
 }
