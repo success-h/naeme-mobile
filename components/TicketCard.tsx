@@ -38,17 +38,15 @@ export default function TicketCard(props: TicketDataTypes) {
       activeOpacity={0.9}
       onPress={() => navigation.navigate('Detail', { ...ticketEvent })}
     >
-      <View className="h-[500px] mt-20 w-[315px] mx-4 rounded-3xl">
-        <Image
-          source={{ uri: ticketEvent.image }}
-          blurRadius={10}
-          className="h-full w-full absolute rounded-3xl"
-          resizeMode="cover"
-        />
+      <LinearGradient
+        colors={['#eee', '#fff', '#eee']}
+        end={{ x: 0.3, y: 0.2 }}
+        className="h-[500px] mt-20 w-[315px] mx-4 rounded-3xl"
+      >
         <View className="h-full w-full py-7 px-4">
           <MyText
             textStyle="open-sans-bold"
-            style="text-white text-gray-300 text-3xl"
+            style="text-white text-gray-800 text-3xl"
           >
             {props.event_name}
           </MyText>
@@ -66,10 +64,10 @@ export default function TicketCard(props: TicketDataTypes) {
           <View className="border-b border-gray-200 my-4" />
           <Image
             source={{ uri: props.qr_code }}
-            className="h-[130px] w-[130px] mx-auto"
+            className="h-[130px] w-[130px] mx-auto shadow-lg"
           />
           <View className="border-b border-gray-200 my-4" />
-          <View className="bg-white rounded-lg px-2 py-2">
+          <View className="bg-white shadow-lg rounded-lg px-2 py-2">
             <View className="flex-row justify-between">
               <View className="gap-5">
                 <View>
@@ -139,7 +137,7 @@ export default function TicketCard(props: TicketDataTypes) {
             </View>
           </View>
         </View>
-      </View>
+      </LinearGradient>
     </TouchableOpacity>
   );
 }
