@@ -14,6 +14,6 @@ export function ReactNativeNumberFormat({ value }: { value: number }) {
   );
 }
 
-export function formatTime(time: string) {
+export function formatTime(time: string | null) {
   return moment(time, 'HH:mm').format('h:mm A');
 }

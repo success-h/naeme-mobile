@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { Text, View } from 'react-native';
+import { StringOrNull } from '../types/typings';
+import { MyText } from '../components/AppText';
 
 interface Props {
-  date: string;
-  end_time: string;
+  date: StringOrNull;
+  end_time: StringOrNull;
 }
 
 export const Countdown = ({ date, end_time }: Props) => {
@@ -29,18 +31,18 @@ export const Countdown = ({ date, end_time }: Props) => {
   } else {
     return (
       <View className="flex-row items-center">
-        <Text className="mx-1 text-lg text-gray-200 font-semibold">
+        <MyText textStyle="open-sans-bold" style="mr-1 text-2xl text-gray-700">
           {timeBetween.days()}d{' '}
-        </Text>
-        <Text className="mr-1 text-lg text-gray-200 font-semibold">
+        </MyText>
+        <MyText textStyle="open-sans-bold" style="mr-1 text-2xl text-gray-700">
           {timeBetween.hours()}h{' '}
-        </Text>
-        <Text className="mr-1 text-lg text-gray-200 font-semibold">
+        </MyText>
+        <MyText textStyle="open-sans-bold" style="mr-1 text-2xl text-gray-700">
           {timeBetween.minutes()}min{' '}
-        </Text>
-        <Text className="mr-1 text-lg text-gray-200 font-semibold">
+        </MyText>
+        <MyText textStyle="open-sans-bold" style="mr-1 text-2xl text-gray-700">
           {timeBetween.seconds()}s{' '}
-        </Text>
+        </MyText>
       </View>
     );
   }

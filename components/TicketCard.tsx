@@ -1,25 +1,26 @@
 import { serverUrl } from '@env';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLayoutEffect, useState } from 'react';
-import { Image, Pressable, Text, View } from 'react-native';
+import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { RootStackParamList } from '../types/types';
 import { EventDataTypes, TicketDataTypes } from '../types/typings';
 import { MyText } from './AppText';
+import { formatTime } from '../Utils/formatter';
+import { Countdown } from '../Utils/CountDown';
+import { Entypo } from '@expo/vector-icons';
 
 type NavigationPrp = NavigationProp<RootStackParamList, 'Detail'>;
 
 export default function TicketCard(props: TicketDataTypes) {
   const [ticketEvent, setTicketEvent] = useState({} as EventDataTypes);
-  console.log(ticketEvent);
-  console.log(ticketEvent);
 
   const fetchTickets = async () => {
-    if (props.id) {
+    if (props.event) {
       const response = await axios.get(`${serverUrl}/events/${props.event}`);
       const data = await response.data;
-      console.log('data', data);
       if (data) {
         setTicketEvent(data);
       }
@@ -27,37 +28,102 @@ export default function TicketCard(props: TicketDataTypes) {
   };
 
   useLayoutEffect(() => {
-    console.log('...........called..............');
     fetchTickets();
   }, []);
 
   const navigation = useNavigation<NavigationPrp>();
 
   return (
-    <LinearGradient
-      colors={['#0A0A0A', '#0A0A0A', '#0E0E17']}
-      end={[0.1, 0.8]}
-      className="h-[500px] mt-20 w-[310px] rounded-3xl mx-2 px-4 py-5"
+    <TouchableOpacity
+      activeOpacity={0.9}
+      onPress={() => navigation.navigate('Detail', { ...ticketEvent })}
     >
-      <Pressable
-        onPress={() => navigation.navigate('Detail', { ...ticketEvent })}
+      <LinearGradient
+        className="h-[500px] mt-20 w-[315px] mx-4 px-4 py-7 rounded-3xl"
+        colors={['#fff', '#eee', '#fff']}
+        end={[0.1, 0.8]}
       >
-        <MyText
-          textStyle="open-sans-bold"
-          style="text-white text-[#d73717] text-2xl"
-        >
-          {ticketEvent.title}
-        </MyText>
-        <View className="flex-row mt-3">
-          <Text
-            style={{ fontFamily: 'open-sans-semi' }}
-            className="text-[#fff] rounded-full text-sm"
+        <View className="h-full w-full">
+          <MyText
+            textStyle="open-sans-bold"
+            style="text-white text-[#000000] text-3xl"
           >
-            {props.title}
-          </Text>
+            {props.event_name}
+          </MyText>
+          <View className="flex-row ml-2 mt-3 items-center">
+            <View className="flex-row items-center shadow-xl rounded-lg shadow-gray-400 px-3 gap-1 pb-1 bg-[#f23f55]">
+              <FontAwesome name="ticket" size={17} color="#e8e1e2" />
+              <Text
+                style={{ fontFamily: 'open-sans-semi' }}
+                className="text-[#e8e1e2] text-sm"
+              >
+                {props.title}
+              </Text>
+            </View>
+          </View>
+          <View className="border-b border-gray-200 my-4" />
+          <Image
+            source={{ uri: props.qr_code }}
+            className="h-[130px] w-[130px] mx-auto"
+          />
+          <View className="border-b border-gray-200 my-4" />
+          <View className="flex-row justify-between">
+            <View className="gap-5">
+              <View>
+                <MyText textStyle="open-sans-bold" style="text-gray-500">
+                  Date
+                </MyText>
+                <MyText
+                  textStyle="open-sans-bold"
+                  style="text-[#000000] text-lg"
+                >
+                  {props.date}
+                </MyText>
+              </View>
+              <View>
+                <MyText textStyle="open-sans-bold" style="text-gray-500">
+                  Time
+                </MyText>
+                <MyText
+                  textStyle="open-sans-bold"
+                  style="text-[#000000] text-lg"
+                >
+                  {formatTime(props.start_time)}
+                </MyText>
+              </View>
+            </View>
+            <View className="gap-5">
+              <View>
+                <MyText textStyle="open-sans-bold" style="text-gray-500">
+                  Quantity
+                </MyText>
+                <MyText
+                  textStyle="open-sans-bold"
+                  style="text-[#000000] text-lg"
+                >
+                  {props.quantity}
+                </MyText>
+              </View>
+              <View>
+                <MyText textStyle="open-sans-bold" style="text-gray-500">
+                  Price Each
+                </MyText>
+                <MyText
+                  textStyle="open-sans-bold"
+                  style="text-[#000000] text-lg"
+                >
+                  {props.price * props.quantity}
+                </MyText>
+              </View>
+            </View>
+          </View>
+          <View className="border-b border-gray-200 my-4" />
+          <View className="flex-row items-center justify-between">
+            <Entypo name="time-slot" size={24} color="#000" />
+            <Countdown date={props.date} end_time={props.end_time} />
+          </View>
         </View>
-        <Image source={{ uri: props.qr_code }} />
-      </Pressable>
-    </LinearGradient>
+      </LinearGradient>
+    </TouchableOpacity>
   );
 }

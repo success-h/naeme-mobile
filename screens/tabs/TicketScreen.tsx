@@ -36,8 +36,7 @@ export default function TicketScreen({
 }: RootTabScreenProps<'Ticket'>) {
   const { user } = useAuthContext();
   const [tickets, setTickets] = useState<TicketDataTypes[]>([]);
-  const { loading, setLoading } = useEventContext();
-
+  const [loading, setLoading] = useState(true);
   const fetchTickets = async () => {
     const response = await axios.get(
       `${serverUrl}/my-tickets/?user=${user.id}`
@@ -47,10 +46,10 @@ export default function TicketScreen({
       setTickets(data.results);
       setLoading(false);
     }
+    setLoading(false);
   };
 
   useLayoutEffect(() => {
-    setLoading(true);
     fetchTickets();
   }, []);
 
