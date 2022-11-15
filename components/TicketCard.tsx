@@ -38,15 +38,17 @@ export default function TicketCard(props: TicketDataTypes) {
       activeOpacity={0.9}
       onPress={() => navigation.navigate('Detail', { ...ticketEvent })}
     >
-      <LinearGradient
-        className="h-[500px] mt-20 w-[315px] mx-4 px-4 py-7 rounded-3xl"
-        colors={['#fff', '#eee', '#fff']}
-        end={[0.1, 0.8]}
-      >
-        <View className="h-full w-full">
+      <View className="h-[500px] mt-20 w-[315px] mx-4 rounded-3xl">
+        <Image
+          source={{ uri: ticketEvent.image }}
+          blurRadius={10}
+          className="h-full w-full absolute rounded-3xl"
+          resizeMode="cover"
+        />
+        <View className="h-full w-full py-7 px-4">
           <MyText
             textStyle="open-sans-bold"
-            style="text-white text-[#000000] text-3xl"
+            style="text-white text-gray-300 text-3xl"
           >
             {props.event_name}
           </MyText>
@@ -67,63 +69,77 @@ export default function TicketCard(props: TicketDataTypes) {
             className="h-[130px] w-[130px] mx-auto"
           />
           <View className="border-b border-gray-200 my-4" />
-          <View className="flex-row justify-between">
-            <View className="gap-5">
-              <View>
-                <MyText textStyle="open-sans-bold" style="text-gray-500">
-                  Date
-                </MyText>
-                <MyText
-                  textStyle="open-sans-bold"
-                  style="text-[#000000] text-lg"
-                >
-                  {props.date}
-                </MyText>
+          <View className="bg-white rounded-lg px-2 py-2">
+            <View className="flex-row justify-between">
+              <View className="gap-5">
+                <View>
+                  <MyText
+                    textStyle="open-sans-bold"
+                    style="text-rose-500 text-xs"
+                  >
+                    Date
+                  </MyText>
+                  <MyText
+                    textStyle="open-sans-bold"
+                    style="text-[#000000] text-lg"
+                  >
+                    {props.date}
+                  </MyText>
+                </View>
+                <View>
+                  <MyText
+                    textStyle="open-sans-bold"
+                    style="text-rose-500 text-xs"
+                  >
+                    Time
+                  </MyText>
+                  <MyText
+                    textStyle="open-sans-bold"
+                    style="text-[#000000] text-lg"
+                  >
+                    {formatTime(props.start_time)}
+                  </MyText>
+                </View>
               </View>
-              <View>
-                <MyText textStyle="open-sans-bold" style="text-gray-500">
-                  Time
-                </MyText>
-                <MyText
-                  textStyle="open-sans-bold"
-                  style="text-[#000000] text-lg"
-                >
-                  {formatTime(props.start_time)}
-                </MyText>
+              <View className="gap-5">
+                <View>
+                  <MyText
+                    textStyle="open-sans-bold"
+                    style="text-rose-500 text-xs"
+                  >
+                    Quantity
+                  </MyText>
+                  <MyText
+                    textStyle="open-sans-bold"
+                    style="text-[#000000] text-lg"
+                  >
+                    {props.quantity}
+                  </MyText>
+                </View>
+                <View>
+                  <MyText
+                    textStyle="open-sans-bold"
+                    style="text-rose-500 text-xs"
+                  >
+                    Price Each
+                  </MyText>
+                  <MyText
+                    textStyle="open-sans-bold"
+                    style="text-[#000000] text-lg"
+                  >
+                    {props.price * props.quantity}
+                  </MyText>
+                </View>
               </View>
             </View>
-            <View className="gap-5">
-              <View>
-                <MyText textStyle="open-sans-bold" style="text-gray-500">
-                  Quantity
-                </MyText>
-                <MyText
-                  textStyle="open-sans-bold"
-                  style="text-[#000000] text-lg"
-                >
-                  {props.quantity}
-                </MyText>
-              </View>
-              <View>
-                <MyText textStyle="open-sans-bold" style="text-gray-500">
-                  Price Each
-                </MyText>
-                <MyText
-                  textStyle="open-sans-bold"
-                  style="text-[#000000] text-lg"
-                >
-                  {props.price * props.quantity}
-                </MyText>
-              </View>
+            <View className="border-b border-gray-200 my-4" />
+            <View className="flex-row items-center justify-between">
+              <Entypo name="time-slot" size={24} color="#282828" />
+              <Countdown date={props.date} end_time={props.end_time} />
             </View>
-          </View>
-          <View className="border-b border-gray-200 my-4" />
-          <View className="flex-row items-center justify-between">
-            <Entypo name="time-slot" size={24} color="#000" />
-            <Countdown date={props.date} end_time={props.end_time} />
           </View>
         </View>
-      </LinearGradient>
+      </View>
     </TouchableOpacity>
   );
 }

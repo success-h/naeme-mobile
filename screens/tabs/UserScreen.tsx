@@ -38,18 +38,17 @@ export default function UserScreen({
     useEventContext();
   const [myEvent, setMyEvent] = useState<EventDataTypes[]>([]);
   const [logoutLoading, setlogoutLoading] = useState(false);
-  const [listLoading, setListLoading] = useState(false);
 
   console.log('Loading', loading);
 
   const Url = `https://naeme-api.herokuapp.com/api/events/?owner=${user.id}`;
 
   useLayoutEffect(() => {
+    setLoading(true);
     (async () => {
-      setListLoading(true);
       const events: EventDataTypes[] = await fetchData(Url);
       setMyEvent(events);
-      setListLoading(false);
+      setLoading(false);
     })();
   }, []);
 
@@ -124,7 +123,7 @@ export default function UserScreen({
           showsVerticalScrollIndicator={false}
           ListFooterComponent={<Loader isLoading={loading} />}
           ListEmptyComponent={
-            <MyEventLoaderScreen title="event" isLoading={listLoading} />
+            <MyEventLoaderScreen title="event" isLoading={loading} />
           }
           refreshControl={
             <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />

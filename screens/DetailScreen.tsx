@@ -22,19 +22,17 @@ export default function DetailScreen({
   route,
 }: RootStackScreenProps<'Detail'>) {
   const scrollA = useRef(new Animated.Value(0)).current;
-
   const { user } = useAuthContext();
 
   const data = route.params;
-
   return (
     <LinearGradient
-      colors={['#0f0f15', '#272b31']}
+      colors={['#ffffff', '#eeeeee']}
       start={{ x: 0.9, y: 0.4 }}
       className="flex-1"
     >
       <View className="w-full absolute bottom-0 py-4 mb-2 items-center z-10">
-        <Pressable className="bg-[#eeeeee] flex-row px-20 py-3 rounded-xl shadow-md w-3/5 mx-auto">
+        <Pressable className="bg-[#000000] flex-row px-20 py-3 rounded-xl shadow-md w-3/5 mx-auto">
           <MyText
             textStyle="open-sans-bold"
             style="text-[#f94c57] text-md mr-2"
@@ -45,7 +43,6 @@ export default function DetailScreen({
         </Pressable>
       </View>
       <Animated.ScrollView
-        stickyHeaderIndices={[1]}
         scrollEventThrottle={16}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollA } } }],
@@ -67,7 +64,7 @@ export default function DetailScreen({
           <TouchableOpacity
             onPress={() => navigation.navigate('EditEventModal', { ...data })}
             className={` ${
-              Platform.OS === 'ios' ? 'top-14' : 'top-12'
+              Platform.OS === 'ios' ? 'top-5' : 'top-12'
             } bg-[#f7f7f7] shadow-sm shadow-gray-500 z-30 absolute rounded-full right-5 items-center p-2`}
           >
             <Entypo name="edit" size={17} color="#181818" />
@@ -77,7 +74,7 @@ export default function DetailScreen({
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           className={` ${
-            Platform.OS === 'ios' ? 'top-14' : 'top-12'
+            Platform.OS === 'ios' ? 'top-5' : 'top-12'
           } bg-[#f7f7f7] shadow-sm shadow-gray-500 z-30 absolute rounded-full left-5 items-center p-2`}
         >
           <AntDesign name="arrowleft" size={17} color="#181818" />

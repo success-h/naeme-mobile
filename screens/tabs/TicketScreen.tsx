@@ -27,13 +27,13 @@ import {
 } from '../../types/typings';
 import { MyEventLoaderScreen } from '../../components/Loader';
 import { useEventContext } from '../../hooks/useEvent';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 import TicketCard from '../../components/TicketCard';
 
 export default function TicketScreen({
   navigation,
   route,
-}: RootTabScreenProps<'Ticket'>) {
+}: TabScreenProps<'Ticket'>) {
+  console.log(route.name);
   const { user } = useAuthContext();
   const [tickets, setTickets] = useState<TicketDataTypes[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,7 +50,9 @@ export default function TicketScreen({
   };
 
   useLayoutEffect(() => {
-    fetchTickets();
+    if (route.name === 'Ticket') {
+      fetchTickets();
+    }
   }, []);
 
   return (
