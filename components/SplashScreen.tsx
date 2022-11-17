@@ -1,5 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, Dimensions, Image, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Animated,
+  Dimensions,
+  Image,
+  Text,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 /*// @ts-ignore */
@@ -40,7 +47,6 @@ export default function SplashScreen() {
           useNativeDriver: true,
         }),
         Animated.timing(scaleLogo, {
-          // Scaling to 0.35
           toValue: 0.6,
           useNativeDriver: true,
         }),
@@ -71,7 +77,7 @@ export default function SplashScreen() {
           useNativeDriver: true,
         }),
       ]).start();
-    }, 500);
+    }, 200);
   }, []);
 
   // Going to Move Up like Nav Bar...
@@ -108,17 +114,29 @@ export default function SplashScreen() {
               transform: [{ translateY: moveTitle.y }, { scale: scaleLogo }],
             }}
           ></Animated.Image>
-
-          <Animated.Text
-            style={{
-              fontSize: 25,
-              fontWeight: 'bold',
-              color: 'white',
-              transform: [{ translateY: moveTitle.y }, { scale: scaleLogo }],
-            }}
-          >
-            Welcome
-          </Animated.Text>
+          <Animated.View className="flex-row items-center">
+            <Animated.Text
+              style={{
+                fontSize: 25,
+                fontWeight: 'bold',
+                color: 'white',
+                transform: [{ translateY: moveTitle.y }, { scale: scaleLogo }],
+              }}
+            >
+              Welcome
+            </Animated.Text>
+            <Animated.View
+              style={{
+                transform: [{ translateY: moveTitle.y }, { scale: scaleLogo }],
+              }}
+            >
+              <ActivityIndicator
+                className="-ml-4"
+                size={'small'}
+                color="#eee"
+              />
+            </Animated.View>
+          </Animated.View>
         </Animated.View>
       </Animated.View>
 

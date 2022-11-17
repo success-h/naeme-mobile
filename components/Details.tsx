@@ -4,8 +4,9 @@ import {
   ScrollView,
   Linking,
   Text,
+  Animated,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Entypo, AntDesign, Octicons, Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
 import { Countdown } from '../Utils/CountDown';
@@ -21,9 +22,32 @@ export default function Details(props: EventDataTypes) {
   const dt = moment(props.date + ' ' + props?.end_time, 'DD/MM/YYYY HH:mm');
   const targetTime = moment(dt);
   const [currentTime, setCurrentTime] = useState(moment());
-  const timeBetween = moment.duration(targetTime.diff(currentTime));
   const time = moment(props.start_time, 'HH:mm').format('h:mm A');
   const date = moment(props.date).format('MMMM D, YYYY');
+  const opacity = useRef(new Animated.Value(0)).current;
+
+  function fadeIn() {
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 1500,
+      useNativeDriver: true,
+    }).start();
+  }
+  function fadeOut() {
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  useEffect(() => {
+    fadeIn();
+    return () => {
+      fadeOut();
+      console.log('fadeout-------------');
+    };
+  }, []);
 
   // description read more
   const [readMore, setReadMore] = useState(false);
@@ -37,7 +61,10 @@ export default function Details(props: EventDataTypes) {
   return (
     <View className="rounded-[30px] flex-1 px-4 pb-20">
       <View className="">
-        <View className="flex-row justify-between mt-4">
+        <Animated.View
+          style={[{ opacity }]}
+          className="flex-row justify-between mt-4"
+        >
           <MyText
             style="mt-4 text-2xl my-3 font-bold text-[#000000]"
             textStyle="open-sans-bold"
@@ -61,15 +88,21 @@ export default function Details(props: EventDataTypes) {
               </View>
             )}
           </View>
-        </View>
-        <TouchableOpacity className="my-1 flex-row items-center justify-between">
+        </Animated.View>
+        <Animated.View
+          style={[{ opacity }]}
+          className="my-1 flex-row items-center justify-between"
+        >
           <View className="flex-row justify-between p-2 items-center mr-3 bg-gray-100 border border-gray-300 w-[100%] rounded-3xl">
             <Entypo name="time-slot" size={24} color="#282828" />
             <Countdown date={props.date} end_time={props.end_time} />
           </View>
-        </TouchableOpacity>
+        </Animated.View>
       </View>
-      <View className="flex-row items-center mt-5 gap-x-2">
+      <Animated.View
+        style={[{ opacity }]}
+        className="flex-row items-center mt-5 gap-x-2"
+      >
         <View className="p-2 items-center mr-3 justify-center h-8 w-8 rounded-full bg-gray-200">
           <Ionicons name="md-calendar" size={16} color="#f94c57" />
         </View>
@@ -79,8 +112,11 @@ export default function Details(props: EventDataTypes) {
         >
           {date}
         </MyText>
-      </View>
-      <View className="flex-row items-center mt-3 gap-x-2">
+      </Animated.View>
+      <Animated.View
+        style={[{ opacity }]}
+        className="flex-row items-center mt-3 gap-x-2"
+      >
         <View className="p-2 items-center mr-3 justify-center h-8 w-8 rounded-full bg-gray-200">
           <AntDesign name="clockcircle" size={16} color="#f94c57" />
         </View>
@@ -90,8 +126,11 @@ export default function Details(props: EventDataTypes) {
         >
           {time}
         </MyText>
-      </View>
-      <View className="flex-row items-center mt-3 gap-x-2">
+      </Animated.View>
+      <Animated.View
+        style={[{ opacity }]}
+        className="flex-row items-center mt-3 gap-x-2"
+      >
         <View className="p-2 items-center mr-3 justify-center h-8 w-8 rounded-full bg-gray-200">
           <Octicons name="location" size={16} color="#f94c57" />
         </View>
@@ -101,17 +140,19 @@ export default function Details(props: EventDataTypes) {
         >
           {props.location}
         </MyText>
-      </View>
+      </Animated.View>
       {props.website && (
-        <TouchableOpacity
-          onPress={() => Linking.openURL(props.website)}
-          className="p-2 items-center justify-center h-8 mt-3 w-8 rounded-full bg-gray-200"
-        >
-          <AntDesign name="link" size={16} color="#f94c57" />
-        </TouchableOpacity>
+        <Animated.View style={[{ opacity }]}>
+          <TouchableOpacity
+            onPress={() => Linking.openURL(props.website)}
+            className="p-2 items-center justify-center h-8 mt-3 w-8 rounded-full bg-gray-200"
+          >
+            <AntDesign name="link" size={16} color="#f94c57" />
+          </TouchableOpacity>
+        </Animated.View>
       )}
 
-      <View className="mt-6">
+      <Animated.View style={[{ opacity }]} className="mt-6">
         <MyText style="text-black leading-5 text-lg" textStyle="open-sans-bold">
           Description:
         </MyText>
@@ -140,23 +181,19 @@ export default function Details(props: EventDataTypes) {
             )}
           </Text>
         </MyText>
-      </View>
-      <View className="rounded-2xl">
-        <MapView
-          initialRegion={{
-            latitude: Lat,
-            longitude: Lng,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
-          }}
-          className="h-[377px] mt-7"
-        />
-      </View>
+      </Animated.View>
     </View>
   );
 }
 
-// f94c57;
-// fc3c44;
-
-// c2cad7;
+// <View className="rounded-2xl">
+//   <MapView
+//     initialRegion={{
+//       latitude: Lat,
+//       longitude: Lng,
+//       latitudeDelta: 0.005,
+//       longitudeDelta: 0.005,
+//     }}
+//     className="h-[377px] mt-7"
+//   />
+// </View>
