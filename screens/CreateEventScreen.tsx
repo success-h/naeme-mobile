@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   Platform,
   TextInput,
-  Button,
   Image,
   Pressable,
   Animated,
+  ActivityIndicator,
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { RootStackScreenProps } from '../types/types';
@@ -18,11 +18,15 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { MyText } from '../components/AppText';
 import { Controller, useForm } from 'react-hook-form';
 import * as ImagePicker from 'expo-image-picker';
-import { LinearGradient } from 'expo-linear-gradient';
-import DateTimePicker, {
-  DateTimePickerAndroid,
-} from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { formatDate, formatTime } from '../Utils/formatter';
+import { useAuthContext } from '../hooks/useAuth';
+import axios from 'axios';
+import { serverUrl } from '@env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TokensType } from '../hooks/useCachedResources';
+import moment from 'moment';
+import { EventDataTypes } from '../types/typings';
 
 type ImageProp = {
   assetId: string;
@@ -33,7 +37,6 @@ export default function CreateEventScreen({
   navigation,
   route,
 }: RootStackScreenProps<'CreateEvent'>) {
-  // local states starts
   const [image, setImage] = useState<ImagePicker.ImageInfo | null>(null);
   const [date, setDate] = useState(new Date(1598051730000));
   const [startTime, setStartTime] = useState(new Date(15980988770000));
@@ -42,6 +45,10 @@ export default function CreateEventScreen({
   const [showStartTime, setShowStartTime] = useState(false);
   const [showEndTime, setShowEndTime] = useState(false);
   const opacity = useRef(new Animated.Value(0)).current;
+  const imageOpacity = useRef(new Animated.Value(0)).current;
+  const { user } = useAuthContext();
+  const [loading, setLoading] = useState(false);
+
   // states ended
 
   // animation functions
@@ -53,7 +60,7 @@ export default function CreateEventScreen({
     }).start();
   }
   function fadeImage() {
-    Animated.timing(opacity, {
+    Animated.timing(imageOpacity, {
       toValue: 1,
       duration: 1000,
       useNativeDriver: true,
@@ -97,19 +104,17 @@ export default function CreateEventScreen({
       title: '',
       location: '',
       participants: '',
-      image: {},
       description: '',
       website: '',
-      owner: '',
-      organizer: '',
     },
   });
 
-  // let localUri = image.uri;
-  // let filename = localUri.split('/').pop();
-  // // Infer the type of the image
-  // let match = /\.(\w+)$/.exec(filename);
-  // let type = match ? `image/${match[1]}` : `image`;
+  let Uri = image?.uri;
+  let fileName = Uri?.split('/').pop();
+
+  // @ts-ignore */
+  let match: RegExpExecArray | null = /\.(\w+)$/.exec(fileName);
+  let type = match ? `image/${match[1]}` : `image`;
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -125,13 +130,70 @@ export default function CreateEventScreen({
     }
   };
 
+  // submit function
+  interface SubmitData {
+    title: string;
+    location: string;
+    participants: string;
+    description: string;
+    website: string;
+  }
+
+  const onSubmit = async (data: SubmitData) => {
+    const event_date = moment(date).format('YYYY-MM-DD');
+    const start_time = startTime.toLocaleTimeString();
+    const end_time = endTime.toLocaleTimeString();
+    const jsonValue = await AsyncStorage.getItem('naemeUser');
+    const tokens: TokensType = jsonValue != null ? JSON.parse(jsonValue) : null;
+
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('description', data.description);
+    formData.append('participants', Number(data.participants));
+    formData.append('image', {
+      name: fileName,
+      type: type,
+      uri: Platform.OS === 'ios' ? Uri?.replace('file://', '') : Uri,
+    });
+    formData.append('location', data.location);
+    formData.append('date', event_date);
+    formData.append('start_time', start_time);
+    formData.append('end_time', end_time);
+    formData.append('website', data?.website);
+    formData.append('owner', user?.id);
+    formData.append('organizer', user?.username);
+
+    const url = `${serverUrl}/events/`;
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${tokens?.access}`,
+      },
+      body: formData,
+    };
+
+    try {
+      setLoading(true);
+      if (image !== null) {
+        const response = await fetch(url, requestOptions);
+        const data: EventDataTypes = await response.json();
+        if (response.status === 201) {
+          const jsonValue = JSON.stringify(data.id);
+          AsyncStorage.setItem('eventId', jsonValue);
+        }
+        setLoading(false);
+        return data;
+      }
+    } catch (error) {
+      setLoading(false);
+      return error;
+    }
+  };
+
   return (
     <ScrollView className="">
-      <LinearGradient
-        end={{ x: 0.1, y: 0.7 }}
-        colors={['#ddd', '#fff', '#eee']}
-        className="flex-1 pb-32 px-4"
-      >
+      <View className="flex-1 pb-32 px-4 bg-white">
         <StatusBar animated={true} style="dark" />
         <SafeAreaView className={Platform.OS === 'ios' ? 'mt-16' : 'mt-12'}>
           <View className="flex-row justify-between items-center">
@@ -149,9 +211,12 @@ export default function CreateEventScreen({
           </View>
         </SafeAreaView>
         <View className="mt-7">
+          <MyText textStyle="open-sans-bold" style="mb-2 text-sm">
+            Title
+          </MyText>
           <Animated.View
             style={[{ opacity }]}
-            className="bg-gray-100 rounded-lg px-4 py-5 my-2 shadow-lg"
+            className="bg-gray-100 rounded-lg px-3"
           >
             <Controller
               control={control}
@@ -160,7 +225,7 @@ export default function CreateEventScreen({
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
-                  className=" text-gray-500"
+                  className=" text-gray-500 py-4"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -170,11 +235,16 @@ export default function CreateEventScreen({
               )}
               name="title"
             />
-            {errors.title && <Text>This is required.</Text>}
           </Animated.View>
+          {errors.title && (
+            <Text className="text-rose-400 text-xs">This is required.</Text>
+          )}
+          <MyText textStyle="open-sans-bold" style="my-1 mt-2 text-sm">
+            Location
+          </MyText>
           <Animated.View
             style={[{ opacity }]}
-            className="bg-gray-100 py-5 px-4 rounded-lg my-2  shadow-lg"
+            className="bg-gray-100 rounded-lg my-2 px-3"
           >
             <Controller
               control={control}
@@ -183,7 +253,7 @@ export default function CreateEventScreen({
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
-                  className="text-gray-500"
+                  className="text-gray-500 py-4"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -194,11 +264,16 @@ export default function CreateEventScreen({
               )}
               name="location"
             />
-            {errors.title && <Text>This is required.</Text>}
           </Animated.View>
+          {errors.location && (
+            <Text className="text-rose-400 text-xs">This is required.</Text>
+          )}
+          <MyText textStyle="open-sans-bold" style="my-1 text-sm">
+            Description
+          </MyText>
           <Animated.View
             style={[{ opacity }]}
-            className="bg-gray-100 py-5 px-4 rounded-lg my-2  shadow-lg"
+            className="bg-gray-100 px-3 rounded-lg my-2"
           >
             <Controller
               control={control}
@@ -207,7 +282,7 @@ export default function CreateEventScreen({
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
-                  className="text-gray-500"
+                  className="text-gray-500 py-5"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -217,11 +292,16 @@ export default function CreateEventScreen({
               )}
               name="description"
             />
-            {errors.title && <Text>This is required.</Text>}
           </Animated.View>
+          {errors.description && (
+            <Text className="text-rose-400 text-xs">This is required.</Text>
+          )}
+          <MyText textStyle="open-sans-bold" style="my-1 text-sm">
+            Link
+          </MyText>
           <Animated.View
             style={[{ opacity }]}
-            className="bg-gray-100 py-5 px-4 rounded-lg my-2  shadow-lg"
+            className="bg-gray-100 py-5 px-4 rounded-lg my-2"
           >
             <Controller
               control={control}
@@ -230,7 +310,7 @@ export default function CreateEventScreen({
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
-                  className="shadow  text-gray-500"
+                  className="text-gray-500"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -242,11 +322,16 @@ export default function CreateEventScreen({
               )}
               name="website"
             />
-            {errors.title && <Text>This is required.</Text>}
           </Animated.View>
+          {errors.website && (
+            <Text className="text-rose-400 text-xs">This is required.</Text>
+          )}
+          <MyText textStyle="open-sans-bold" style="my-1 text-sm">
+            Participants
+          </MyText>
           <Animated.View
             style={[{ opacity }]}
-            className="bg-gray-100 py-5 px-4 rounded-lg shadow-lg my-2"
+            className="bg-gray-100 px-4 rounded-lg my-2"
           >
             <Controller
               control={control}
@@ -255,7 +340,7 @@ export default function CreateEventScreen({
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
-                  className=" text-gray-500"
+                  className=" text-gray-500 py-4"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -266,17 +351,22 @@ export default function CreateEventScreen({
               )}
               name="participants"
             />
-            {errors.title && <Text>This is required.</Text>}
           </Animated.View>
+          {errors.participants && (
+            <Text className="text-rose-400 text-xs">This is required.</Text>
+          )}
+          <MyText textStyle="open-sans-bold" style="my-1 text-sm">
+            Date
+          </MyText>
           <Animated.View
             style={[{ opacity }]}
-            className="my-2 px-4 py-5 bg-gray-100 rounded-lg shadow-lg"
+            className="my-2 px-4  bg-gray-100 rounded-lg"
           >
             <Pressable onPress={() => setShowDate(!showDate)} className="">
               <View className="flex-row items-center justify-between">
                 <MyText
                   textStyle="open-sans-regular"
-                  style="text-sm text-xs text-gray-500"
+                  style="text-sm text-xs py-5 text-gray-500"
                 >
                   {formatDate(date) === 'August 22, 2020'
                     ? 'Select Date'
@@ -314,7 +404,7 @@ export default function CreateEventScreen({
                 setShowStartTime(true);
                 setShowEndTime(false);
               }}
-              className={`bg-gray-100 px-4 py-5 flex-1 justify-center rounded-lg  shadow-xl ${
+              className={`bg-gray-100 px-4 py-5 flex-1 justify-center rounded-lg ${
                 showEndTime && 'h-14'
               }`}
             >
@@ -324,7 +414,7 @@ export default function CreateEventScreen({
                   style="text-sm text-xs text-gray-500"
                 >
                   {formatTime(startTime) === '4:32 AM'
-                    ? 'End Time'
+                    ? 'Start Time'
                     : formatTime(startTime)}
                 </MyText>
 
@@ -355,7 +445,7 @@ export default function CreateEventScreen({
                 setShowEndTime(true);
                 setShowStartTime(false);
               }}
-              className={`bg-gray-100 px-3 py-5 flex-1 justify-center rounded-lg  shadow-xl ${
+              className={`bg-gray-100 px-3 py-5 flex-1 justify-center rounded-lg ${
                 showStartTime && 'h-14'
               }`}
             >
@@ -365,7 +455,7 @@ export default function CreateEventScreen({
                   style="text-sm text-xs text-gray-500"
                 >
                   {formatTime(endTime) === '4:32 AM'
-                    ? 'Start Time'
+                    ? 'End Time'
                     : formatTime(endTime)}
                 </MyText>
 
@@ -392,15 +482,13 @@ export default function CreateEventScreen({
               )}
             </Pressable>
           </Animated.View>
-
           {/* image */}
-
           <Animated.View style={[{ opacity }]} className="h-[300px] mt-4">
             {image && (
-              <Animated.View style={[{ opacity }]}>
+              <Animated.View style={[{ opacity: imageOpacity }]}>
                 <Image
                   source={{ uri: image.uri }}
-                  className="h-full w-full shadow-2xl rounded-2xl"
+                  className="h-full w-full rounded-2xl"
                   resizeMode="cover"
                   fadeDuration={2.4}
                 />
@@ -413,7 +501,10 @@ export default function CreateEventScreen({
               </Animated.View>
             )}
             {!image && (
-              <View className="items-center justify-center">
+              <TouchableOpacity
+                onPress={pickImage}
+                className="items-center justify-center"
+              >
                 <Ionicons name="image" size={54} />
                 <MyText textStyle="open-sans-bold" style="text-center">
                   Upload a Photo
@@ -422,7 +513,7 @@ export default function CreateEventScreen({
                   textStyle="open-sans-medium"
                   style="mt-2 text-center text-gray-500 w-2/4 text-xs"
                 >
-                  more people respond to events with a photo
+                  more people respond to events with a photo; Required
                 </MyText>
                 <TouchableOpacity onPress={pickImage}>
                   <MyText
@@ -432,21 +523,28 @@ export default function CreateEventScreen({
                     Tap here to upload
                   </MyText>
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             )}
-            <View className="flex-row mt-10 items-center justify-center">
-              <TouchableOpacity className="bg-rose-500 rounded-xl">
-                <MyText
-                  style="px-14 py-4 text-white"
-                  textStyle="open-sans-bold"
-                >
-                  Create Event
-                </MyText>
+            <View className="flex-row mt-12 items-center justify-center">
+              <TouchableOpacity
+                onPress={handleSubmit(onSubmit)}
+                className="bg-[#000] rounded-xl"
+              >
+                {loading ? (
+                  <ActivityIndicator size={'small'} className="p-3 px-20" />
+                ) : (
+                  <MyText
+                    style="px-14 py-4 text-rose-300"
+                    textStyle="open-sans-bold"
+                  >
+                    Create Event
+                  </MyText>
+                )}
               </TouchableOpacity>
             </View>
           </Animated.View>
         </View>
-      </LinearGradient>
+      </View>
     </ScrollView>
   );
 }

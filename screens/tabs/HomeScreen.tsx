@@ -66,7 +66,7 @@ const HomeScreen = ({ navigation, route }: TabScreenProps<'Home'>) => {
           </View>
         )}
         onEndReached={loadMoreItem}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.4}
         refreshControl={
           <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
         }
