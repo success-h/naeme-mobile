@@ -17,6 +17,6 @@ export function ReactNativeNumberFormat({ value }: { value: number }) {
 export function formatTime(time: Date | string) {
   return moment(time, 'HH:mm').format('h:mm A');
 }
-export function formatDate(date: Date | null) {
+export function formatDate(date: Date | string) {
   return moment(date).format('MMMM D, YYYY');
 }

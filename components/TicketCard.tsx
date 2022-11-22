@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useLayoutEffect, useState } from 'react';
 import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { RootStackParamList } from '../types/types';
-import { EventDataTypes, TicketDataTypes } from '../types/typings';
+import { EventDataTypes, PaidTicketDataTypes } from '../types/typings';
 import { MyText } from './AppText';
 import { formatTime } from '../Utils/formatter';
 import { Countdown } from '../Utils/CountDown';
@@ -14,7 +14,7 @@ import { Entypo } from '@expo/vector-icons';
 
 type NavigationPrp = NavigationProp<RootStackParamList, 'Detail'>;
 
-export default function TicketCard(props: TicketDataTypes) {
+export default function TicketCard(props: PaidTicketDataTypes) {
   const [ticketEvent, setTicketEvent] = useState({} as EventDataTypes);
 
   const fetchTickets = async () => {

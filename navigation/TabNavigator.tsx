@@ -2,9 +2,6 @@ import {
   BottomTabScreenProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import { useNavigation } from '@react-navigation/native';
-import { useLayoutEffect } from 'react';
-import { Icon } from '@rneui/themed';
 import { RootTabParamList } from '../types/types';
 import HomeScreen from '../screens/tabs/HomeScreen';
 import TicketScreen from '../screens/tabs/TicketScreen';
@@ -29,6 +26,7 @@ export type useTabNavigationProps = BottomTabScreenProps<
 export default function TabNavigator() {
   return (
     <Tab.Navigator
+      initialRouteName="Home"
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: {

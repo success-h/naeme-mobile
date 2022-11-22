@@ -6,6 +6,8 @@ import EditEventModal from '../screens/EditEventModal';
 import HomeScreen from '../screens/tabs/HomeScreen';
 import TabNavigator from './TabNavigator';
 import CreateEventScreen from '../screens/CreateEventScreen';
+import TicketCartScreen from '../screens/TicketCartScreen';
+import CreateTicketScreen from '../screens/CreateTicketScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -29,6 +31,11 @@ function HomeNavigator() {
           component={CreateEventScreen}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="CreateTicket"
+          component={CreateTicketScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Group>
 
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
@@ -36,6 +43,11 @@ function HomeNavigator() {
           name="Detail"
           component={DetailScreen}
           options={{ headerShown: false, presentation: 'modal' }}
+        />
+        <Stack.Screen
+          name="TicketCart"
+          component={TicketCartScreen}
+          options={{ headerShown: false, presentation: 'fullScreenModal' }}
         />
         <Stack.Screen name="EditEventModal" component={EditEventModal} />
       </Stack.Group>

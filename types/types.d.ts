@@ -31,6 +31,8 @@ export type RootStackParamList = {
   PaymentModal: undefined;
   Detail: EventDataTypes;
   CreateEvent: User;
+  CreateTicket: undefined;
+  TicketCart: EventDataTypes;
   NotFound: undefined;
 };
 

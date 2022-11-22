@@ -33,6 +33,13 @@ type ImageProp = {
   uri: string;
 };
 
+export function fadeIn(opacity: Animated.Value) {
+  Animated.timing(opacity, {
+    toValue: 1,
+    duration: 1000,
+    useNativeDriver: true,
+  }).start();
+}
 export default function CreateEventScreen({
   navigation,
   route,
@@ -52,13 +59,6 @@ export default function CreateEventScreen({
   // states ended
 
   // animation functions
-  function fadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-  }
   function fadeImage() {
     Animated.timing(imageOpacity, {
       toValue: 1,
@@ -69,7 +69,7 @@ export default function CreateEventScreen({
 
   // Effects
   useEffect(() => {
-    fadeIn();
+    fadeIn(opacity);
   }, []);
 
   // date time functions
@@ -98,7 +98,15 @@ export default function CreateEventScreen({
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: {
+      errors,
+      dirtyFields,
+      isDirty,
+      isSubmitted,
+      isValidating,
+      isValid,
+      isSubmitting,
+    },
   } = useForm({
     defaultValues: {
       title: '',
@@ -149,7 +157,6 @@ export default function CreateEventScreen({
     const formData = new FormData();
     formData.append('title', data.title);
     formData.append('description', data.description);
-    formData.append('participants', Number(data.participants));
     formData.append('image', {
       name: fileName,
       type: type,
@@ -181,10 +188,13 @@ export default function CreateEventScreen({
         if (response.status === 201) {
           const jsonValue = JSON.stringify(data.id);
           AsyncStorage.setItem('eventId', jsonValue);
+          navigation.navigate('CreateTicket');
+          setLoading(false);
         }
         setLoading(false);
         return data;
       }
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       return error;
@@ -192,8 +202,15 @@ export default function CreateEventScreen({
   };
 
   return (
-    <ScrollView className="">
-      <View className="flex-1 pb-32 px-4 bg-white">
+    <ScrollView showsVerticalScrollIndicator={false} className="">
+      <Pressable
+        onPress={() => {
+          setShowEndTime(false);
+          setShowStartTime(false);
+          setShowDate(false);
+        }}
+        className="flex-1 pb-32 px-4 bg-white"
+      >
         <StatusBar animated={true} style="dark" />
         <SafeAreaView className={Platform.OS === 'ios' ? 'mt-16' : 'mt-12'}>
           <View className="flex-row justify-between items-center">
@@ -326,35 +343,7 @@ export default function CreateEventScreen({
           {errors.website && (
             <Text className="text-rose-400 text-xs">This is required.</Text>
           )}
-          <MyText textStyle="open-sans-bold" style="my-1 text-sm">
-            Participants
-          </MyText>
-          <Animated.View
-            style={[{ opacity }]}
-            className="bg-gray-100 px-4 rounded-lg my-2"
-          >
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  className=" text-gray-500 py-4"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  keyboardType="numeric"
-                  placeholder="Number of participants for this event"
-                  placeholderTextColor={'#9d9c9d'}
-                />
-              )}
-              name="participants"
-            />
-          </Animated.View>
-          {errors.participants && (
-            <Text className="text-rose-400 text-xs">This is required.</Text>
-          )}
+
           <MyText textStyle="open-sans-bold" style="my-1 text-sm">
             Date
           </MyText>
@@ -403,6 +392,7 @@ export default function CreateEventScreen({
               onPress={() => {
                 setShowStartTime(true);
                 setShowEndTime(false);
+                setShowDate(false);
               }}
               className={`bg-gray-100 px-4 py-5 flex-1 justify-center rounded-lg ${
                 showEndTime && 'h-14'
@@ -444,6 +434,7 @@ export default function CreateEventScreen({
               onPress={() => {
                 setShowEndTime(true);
                 setShowStartTime(false);
+                setShowDate(false);
               }}
               className={`bg-gray-100 px-3 py-5 flex-1 justify-center rounded-lg ${
                 showStartTime && 'h-14'
@@ -507,34 +498,37 @@ export default function CreateEventScreen({
               >
                 <Ionicons name="image" size={54} />
                 <MyText textStyle="open-sans-bold" style="text-center">
-                  Upload a Photo
+                  Upload event image
                 </MyText>
-                <MyText
-                  textStyle="open-sans-medium"
-                  style="mt-2 text-center text-gray-500 w-2/4 text-xs"
-                >
-                  more people respond to events with a photo; Required
-                </MyText>
-                <TouchableOpacity onPress={pickImage}>
+                {isSubmitted && image === null && (
                   <MyText
-                    textStyle="open-sans-bold"
-                    style="text-rose-500 text-center text-lg"
+                    textStyle="open-sans-medium"
+                    style="mt-2 text-center text-rose-500 w-2/4 text-xs"
                   >
-                    Tap here to upload
+                    Note! more people respond to events with a banner; Required
                   </MyText>
-                </TouchableOpacity>
+                )}
               </TouchableOpacity>
             )}
             <View className="flex-row mt-12 items-center justify-center">
               <TouchableOpacity
+                // onPress={() => navigation.navigate('CreateTicket')}
                 onPress={handleSubmit(onSubmit)}
-                className="bg-[#000] rounded-xl"
+                className={
+                  image === null
+                    ? 'bg-[#c7c6c6] rounded-xl'
+                    : 'bg-[#000] rounded-xl'
+                }
               >
                 {loading ? (
                   <ActivityIndicator size={'small'} className="p-3 px-20" />
                 ) : (
                   <MyText
-                    style="px-14 py-4 text-rose-300"
+                    style={
+                      image === null
+                        ? 'px-14 py-4 text-gray-400'
+                        : 'px-14 py-4 text-rose-300'
+                    }
                     textStyle="open-sans-bold"
                   >
                     Create Event
@@ -544,7 +538,7 @@ export default function CreateEventScreen({
             </View>
           </Animated.View>
         </View>
-      </View>
+      </Pressable>
     </ScrollView>
   );
 }

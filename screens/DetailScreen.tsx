@@ -32,7 +32,10 @@ export default function DetailScreen({
       className="flex-1"
     >
       <View className="w-full absolute bottom-0 py-4 mb-2 items-center z-10">
-        <Pressable className="bg-[#000000] flex-row px-20 py-3 rounded-xl shadow-md w-3/5 mx-auto">
+        <TouchableOpacity
+          onPress={() => navigation.navigate('TicketCart', { ...data })}
+          className="bg-[#000000] flex-row px-20 py-3 rounded-xl shadow-md w-3/5 mx-auto"
+        >
           <MyText
             textStyle="open-sans-bold"
             style="text-[#f94c57] text-md mr-2"
@@ -40,7 +43,7 @@ export default function DetailScreen({
             Book Now
           </MyText>
           <FontAwesome name="ticket" size={16} color="#f94c57" />
-        </Pressable>
+        </TouchableOpacity>
       </View>
       <Animated.ScrollView
         scrollEventThrottle={16}
@@ -77,7 +80,11 @@ export default function DetailScreen({
             Platform.OS === 'ios' ? 'top-5' : 'top-12'
           } bg-[#f7f7f7] shadow-sm shadow-gray-500 z-30 absolute rounded-full left-5 items-center p-2`}
         >
-          <AntDesign name="arrowleft" size={17} color="#181818" />
+          {Platform.OS === 'android' ? (
+            <AntDesign name="arrowleft" size={17} color="#181818" />
+          ) : (
+            <AntDesign name="close" size={17} color="#181818" />
+          )}
         </TouchableOpacity>
       </Animated.ScrollView>
     </LinearGradient>

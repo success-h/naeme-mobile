@@ -74,8 +74,8 @@ const HomeScreen = ({ navigation, route }: TabScreenProps<'Home'>) => {
 
       <View className="absolute top-0 bottom-0 right-0 left-0 -z-10">
         <LinearGradient
-          end={{ x: 0.1, y: 0.2 }}
-          colors={['#070708', '#090a11']}
+          start={{ x: 0.4, y: 0.2 }}
+          colors={['#070708', '#373948']}
           className="h-[340px]"
         />
         <LinearGradient colors={['#eee', '#fff']} className="flex-1" />

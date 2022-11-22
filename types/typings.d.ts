@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface EventDataTypes {
   id: string;
   tickets: {
@@ -43,10 +45,10 @@ interface EventDataTypes {
   owner: string;
   organizer: string;
   total_ticket_count: number;
-  sold_ticket_count: number;
+  total_sold_tickets: number;
 }
 
-export interface TicketDataTypes {
+export interface PaidTicketDataTypes {
   price: number;
   event: StringOrNull;
   event_name: StringOrNull;
@@ -56,9 +58,9 @@ export interface TicketDataTypes {
   event_admin: string;
   used: boolean;
   quantity: number;
-  date: StringOrNull;
-  start_time: StringOrNull;
-  end_time: StringOrNull;
+  date: string;
+  start_time: string;
+  end_time: string;
   id: string;
   qr_code: string | undefined;
 }
@@ -70,11 +72,11 @@ export type ResponseType = {
   results: EventDataTypes[];
 };
 
-export type TicketResponseType = {
+export type PaidTicketResponseType = {
   count: number | null;
   next: StringOrNull;
   previous: StringOrNull;
-  results: TicketDataTypes[];
+  results: PaidTicketDataTypes[];
 };
 
 type StringOrNull = string | null;
@@ -89,4 +91,53 @@ export type User = {
   };
   auth_provider: StringOrNull;
   id: StringOrNull;
+};
+
+export interface CartItems {
+  id: number;
+  price: number;
+  //   lowest_price: number;
+  title: string;
+  quantity: number;
+  event: string;
+  eventItem: EventDataTypes;
+}
+
+interface CartContextTypes {
+  cartItems: CartItems[];
+  setCartItems: React.Dispatch<React.SetStateAction<CartItems[]>>;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  orderSummaryToggle: boolean;
+  setOrderSummaryToggle: React.Dispatch<React.SetStateAction<boolean>>;
+  cartQuantity: number;
+  cartTotal: number;
+  toggleOrderSummary: () => void;
+  getItemQuantity(id: number): number;
+  increaseCartQuantity(
+    id: number,
+    price: number,
+    title: string,
+    event: string,
+    eventItem: EventDataTypes
+  ): void;
+  decreaseCartQuantity(id: number): void;
+}
+
+interface TicketDataTypes {
+  id: number;
+  price: number;
+  lowest_price: number;
+  highest_price: number;
+  title: string;
+  quantity: number;
+  event: string;
+  owner: string;
+}
+
+export type TicketResponseType = {
+  count: number | null;
+  next: StringOrNull;
+  previous: StringOrNull;
+  results: TicketDataTypes[];
 };

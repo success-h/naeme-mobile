@@ -22,8 +22,8 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import {
   EventDataTypes,
   ResponseType,
-  TicketDataTypes,
-  TicketResponseType,
+  PaidTicketDataTypes,
+  PaidTicketResponseType,
 } from '../../types/typings';
 import { MyEventLoaderScreen } from '../../components/Loader';
 import { useEventContext } from '../../hooks/useEvent';
@@ -35,13 +35,13 @@ export default function TicketScreen({
 }: TabScreenProps<'Ticket'>) {
   console.log(route.name);
   const { user } = useAuthContext();
-  const [tickets, setTickets] = useState<TicketDataTypes[]>([]);
+  const [tickets, setTickets] = useState<PaidTicketDataTypes[]>([]);
   const [loading, setLoading] = useState(true);
   const fetchTickets = async () => {
     const response = await axios.get(
       `${serverUrl}/my-tickets/?user=${user.id}`
     );
-    const data: TicketResponseType = await response.data;
+    const data: PaidTicketResponseType = await response.data;
     if (data) {
       setTickets(data.results);
       setLoading(false);
@@ -50,9 +50,7 @@ export default function TicketScreen({
   };
 
   useLayoutEffect(() => {
-    if (route.name === 'Ticket') {
-      fetchTickets();
-    }
+    fetchTickets();
   }, []);
 
   return (
