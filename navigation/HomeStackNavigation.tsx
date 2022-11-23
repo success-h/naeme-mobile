@@ -8,6 +8,7 @@ import TabNavigator from './TabNavigator';
 import CreateEventScreen from '../screens/CreateEventScreen';
 import TicketCartScreen from '../screens/TicketCartScreen';
 import CreateTicketScreen from '../screens/CreateTicketScreen';
+import MyTicketDetailScreen from '../screens/MyTicketDetailScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -34,6 +35,11 @@ function HomeNavigator() {
         <Stack.Screen
           name="CreateTicket"
           component={CreateTicketScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MyTicketDetail"
+          component={MyTicketDetailScreen}
           options={{ headerShown: false }}
         />
       </Stack.Group>

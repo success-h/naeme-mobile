@@ -60,13 +60,13 @@ export default function EventCard(props: EventDataTypes) {
             </TouchableOpacity>
           </View>
 
-          {props.sold_ticket_count === null ? (
+          {props.total_sold_tickets === null ? (
             <View className="right-3 bottom-3 absolute bg-gray-50 px-1 rounded-full">
               <MyText style="">0 SOLD</MyText>
             </View>
           ) : (
             <View className="right-3 bottom-3 absolute bg-gray-50 px-1 rounded-full">
-              <MyText style="">{props.sold_ticket_count} SOLD</MyText>
+              <MyText style="">{props.total_sold_tickets} SOLD</MyText>
             </View>
           )}
         </View>

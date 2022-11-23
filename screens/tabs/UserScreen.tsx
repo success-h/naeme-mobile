@@ -34,17 +34,14 @@ export default function UserScreen({
   route,
 }: RootTabScreenProps<'User'>) {
   const { user, setUser } = useAuthContext();
-  const { fetchData, loading, setLoading, refresh, handleRefresh } =
-    useEventContext();
+  const { fetchData, refresh, handleRefresh } = useEventContext();
   const [myEvent, setMyEvent] = useState<EventDataTypes[]>([]);
   const [logoutLoading, setlogoutLoading] = useState(false);
-
-  console.log('Loading', loading);
+  const [loading, setLoading] = useState(true);
 
   const Url = `https://naeme-api.herokuapp.com/api/events/?owner=${user.id}`;
 
   useLayoutEffect(() => {
-    setLoading(true);
     (async () => {
       const events: EventDataTypes[] = await fetchData(Url);
       setMyEvent(events);

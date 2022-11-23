@@ -67,8 +67,6 @@ export default function TicketCartScreen({
     getTickets();
   }, []);
 
-  console.log({ cartItems });
-
   return (
     <View className="flex-1">
       <View
@@ -76,13 +74,12 @@ export default function TicketCartScreen({
           Platform.OS === 'android' ? 'pt-[20%]' : 'pt-[16%]'
         }`}
       >
-        {/* <View className="h-screen z-50 top-0 absolute bg-rose-300"></View> */}
         <View className="z-20">
           {Platform.OS === 'android' && (
             <TouchableOpacity
               onPress={() => {
                 navigation.goBack();
-                // setCartItems([]);
+                setCartItems([]);
               }}
               className={`z-10 absolute rounded-full left-5 items-center p-2`}
             >
@@ -93,7 +90,7 @@ export default function TicketCartScreen({
             <TouchableOpacity
               onPress={() => {
                 navigation.goBack();
-                // setCartItems([]);
+                setCartItems([]);
               }}
               className={`bg-[#d7d7d7] z-10 absolute rounded-full right-5 items-center p-1`}
             >
@@ -208,12 +205,21 @@ export default function TicketCartScreen({
       </View>
       {orderSummaryToggle ? (
         <View className="absolute bottom-0 pt-20 right-0  left-0 bg-[#19191b] h-[100%]">
-          <MyText
-            textStyle="open-sans-bold"
-            style="text-white text-xl text-rose-400 text-center"
-          >
-            Order Summary
-          </MyText>
+          <View className="flex-row px-3">
+            <View className="flex-1"></View>
+            <MyText
+              textStyle="open-sans-bold"
+              style="text-white text-xl text-rose-400 text-center"
+            >
+              Order Summary
+            </MyText>
+            <TouchableOpacity
+              onPress={() => toggleOrderSummary()}
+              className={`flex-row flex-1 rounded-full  items-center justify-end p-1`}
+            >
+              <AntDesign name="close" size={17} color="#fff" />
+            </TouchableOpacity>
+          </View>
 
           <View className="px-5 mt-5">
             {cartItems.map((item) => {

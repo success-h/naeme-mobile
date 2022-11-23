@@ -12,36 +12,20 @@ import { formatTime } from '../Utils/formatter';
 import { Countdown } from '../Utils/CountDown';
 import { Entypo } from '@expo/vector-icons';
 
-type NavigationPrp = NavigationProp<RootStackParamList, 'Detail'>;
+export type NavigationPrp = NavigationProp<RootStackParamList, 'Detail'>;
 
 export default function TicketCard(props: PaidTicketDataTypes) {
-  const [ticketEvent, setTicketEvent] = useState({} as EventDataTypes);
-
-  const fetchTickets = async () => {
-    if (props.event) {
-      const response = await axios.get(`${serverUrl}/events/${props.event}`);
-      const data = await response.data;
-      if (data) {
-        setTicketEvent(data);
-      }
-    }
-  };
-
-  useLayoutEffect(() => {
-    fetchTickets();
-  }, []);
-
   const navigation = useNavigation<NavigationPrp>();
 
   return (
     <TouchableOpacity
       activeOpacity={0.9}
-      onPress={() => navigation.navigate('Detail', { ...ticketEvent })}
+      onPress={() => navigation.navigate('MyTicketDetail', { ...props })}
     >
       <LinearGradient
         colors={['#eee', '#fff', '#eee']}
         end={{ x: 0.3, y: 0.2 }}
-        className="h-[500px] mt-20 w-[315px] mx-4 rounded-3xl"
+        className="h-[550px] mt-20 w-[315px] mx-4 rounded-3xl"
       >
         <View className="h-full w-full py-7 px-4">
           <MyText
@@ -64,7 +48,7 @@ export default function TicketCard(props: PaidTicketDataTypes) {
           <View className="border-b border-gray-200 my-4" />
           <Image
             source={{ uri: props.qr_code }}
-            className="h-[130px] w-[130px] mx-auto shadow-lg"
+            className="h-[170px] w-[170px] mx-auto shadow-lg"
           />
           <View className="border-b border-gray-200 my-4" />
           <View className="bg-white shadow-lg rounded-lg px-2 py-2">
