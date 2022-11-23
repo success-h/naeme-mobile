@@ -2,6 +2,7 @@ import {
   FlatList,
   Platform,
   Pressable,
+  RefreshControl,
   SafeAreaView,
   Text,
   TouchableOpacity,
@@ -24,6 +25,7 @@ import {
   ResponseType,
   PaidTicketDataTypes,
   PaidTicketResponseType,
+  StringOrNull,
 } from '../../types/typings';
 import { MyEventLoaderScreen } from '../../components/Loader';
 import { useEventContext } from '../../hooks/useEvent';
@@ -37,20 +39,30 @@ export default function TicketScreen({
   const { user } = useAuthContext();
   const [tickets, setTickets] = useState<PaidTicketDataTypes[]>([]);
   const [loading, setLoading] = useState(true);
-  const fetchTickets = async () => {
-    const response = await axios.get(
-      `${serverUrl}/my-tickets/?user=${user.id}`
-    );
-    const data: PaidTicketResponseType = await response.data;
-    if (data) {
-      setTickets(data.results);
-      setLoading(false);
-    }
+  const [refresh, setRefresh] = useState(true);
+
+  const handleRefresh = async () => {
+    setLoading(true);
+    const data = await fetchTickets(user?.id);
+    setTickets(data);
     setLoading(false);
   };
 
-  useLayoutEffect(() => {
-    fetchTickets();
+  const fetchTickets = async (url: StringOrNull) => {
+    const response = await axios.get(`${serverUrl}/my-tickets/?user=${url}`);
+    const data: PaidTicketResponseType = await response.data;
+    setLoading(false);
+    return data?.results;
+  };
+
+  useEffect(() => {
+    setRefresh(false);
+    (async () => {
+      const data = await fetchTickets(user?.id);
+      setTickets(data);
+      setRefresh(false);
+      setLoading(false);
+    })();
   }, []);
 
   return (
@@ -70,6 +82,9 @@ export default function TicketScreen({
           }
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
+          }
         />
       </View>
     </SafeAreaView>

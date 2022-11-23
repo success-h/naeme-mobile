@@ -79,7 +79,7 @@ export type PaidTicketResponseType = {
   results: PaidTicketDataTypes[];
 };
 
-type StringOrNull = string | null;
+export type StringOrNull = string | null;
 
 export type User = {
   username: StringOrNull;
