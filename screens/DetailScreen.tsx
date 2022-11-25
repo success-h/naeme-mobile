@@ -5,7 +5,7 @@ import {
   Animated,
   Pressable,
 } from 'react-native';
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { RootStackScreenProps } from '../types/types';
 import { FontAwesome } from '@expo/vector-icons';
 import Details from '../components/Details';
@@ -63,16 +63,7 @@ export default function DetailScreen({
         </View>
 
         <Details {...data} />
-        {data.owner === user.id && (
-          <TouchableOpacity
-            onPress={() => navigation.navigate('EditEventModal', { ...data })}
-            className={` ${
-              Platform.OS === 'ios' ? 'top-5' : 'top-12'
-            } bg-[#f7f7f7] shadow-sm shadow-gray-500 z-30 absolute rounded-full right-5 items-center p-2`}
-          >
-            <Entypo name="edit" size={17} color="#181818" />
-          </TouchableOpacity>
-        )}
+
         <View className="" />
         <TouchableOpacity
           onPress={() => navigation.goBack()}

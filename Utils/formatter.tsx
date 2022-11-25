@@ -20,3 +20,9 @@ export function formatTime(time: Date | string) {
 export function formatDate(date: Date | string) {
   return moment(date).format('MMMM D, YYYY');
 }
+
+export const formatCurrency = (amount: number) => {
+  return Number(amount)
+    .toFixed(2)
+    .replace(/\d(?=(\d{3})+\.)/g, '$&,');
+};

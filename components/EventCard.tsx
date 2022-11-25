@@ -1,11 +1,4 @@
-import {
-  View,
-  Pressable,
-  Image,
-  TouchableOpacity,
-  Animated,
-  ScrollView,
-} from 'react-native';
+import { View, Image, TouchableOpacity } from 'react-native';
 
 import React, { ReactElement, ReactNode } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -16,6 +9,7 @@ import { RootStackParamList } from '../types/types';
 import { EventDataTypes } from '../types/typings';
 import { useEventContext } from '../hooks/useEvent';
 import { MyText } from './AppText';
+import { formatCurrency } from '../Utils/formatter';
 
 export type useNavigationProps = NativeStackNavigationProp<
   RootStackParamList,
@@ -47,11 +41,7 @@ export default function EventCard(props: EventDataTypes) {
           </View>
 
           <View className="mt-2  items-center p-2 ml-4 absolute shadow-sm shadow-gray-300 bg-white z-30 top-3 right-3 rounded-xl">
-            <TouchableOpacity
-              className=""
-              activeOpacity={0.2}
-              onPress={() => setLike(!like)}
-            >
+            <TouchableOpacity className="" activeOpacity={0.2}>
               {like ? (
                 <Ionicons name="heart" size={27} color="red" />
               ) : (
@@ -80,7 +70,7 @@ export default function EventCard(props: EventDataTypes) {
           <View className="w-full">
             {props.lowest_price ? (
               <MyText style="left-3 bottom-3 absolute bg-gray-200 px-1 rounded-full">
-                ${props.lowest_price}
+                $ {formatCurrency(props.lowest_price)}
               </MyText>
             ) : (
               <MyText style="bottom-3 absolute rounded-full">$0.00</MyText>

@@ -8,14 +8,18 @@ import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { RootStackParamList } from '../types/types';
 import { EventDataTypes, PaidTicketDataTypes } from '../types/typings';
 import { MyText } from './AppText';
-import { formatTime } from '../Utils/formatter';
+import { formatCurrency, formatTime } from '../Utils/formatter';
 import { Countdown } from '../Utils/CountDown';
 import { Entypo } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export type NavigationPrp = NavigationProp<RootStackParamList, 'Detail'>;
 
 export default function TicketCard(props: PaidTicketDataTypes) {
   const navigation = useNavigation<NavigationPrp>();
+  const [isVerified, setIsVerified] = useState(props.used);
+
+  console.log({ isVerified });
 
   return (
     <TouchableOpacity
@@ -23,9 +27,9 @@ export default function TicketCard(props: PaidTicketDataTypes) {
       onPress={() => navigation.navigate('MyTicketDetail', { ...props })}
     >
       <LinearGradient
-        colors={['#eee', '#fff', '#eee']}
+        colors={['#eee', '#fff', '#fff']}
         end={{ x: 0.3, y: 0.2 }}
-        className="h-[550px] mt-20 w-[315px] mx-4 rounded-3xl"
+        className="h-[570px] mt-20 w-[315px] mx-4 rounded-3xl"
       >
         <View className="h-full w-full py-7 px-4">
           <MyText
@@ -46,12 +50,21 @@ export default function TicketCard(props: PaidTicketDataTypes) {
             </View>
           </View>
           <View className="border-b border-gray-200 my-4" />
-          <Image
-            source={{ uri: props.qr_code }}
-            className="h-[170px] w-[170px] mx-auto shadow-lg"
-          />
+
+          <View className="h-[190px] w-[190px] mx-auto shadow-lg mt-4">
+            <Image
+              source={{ uri: props.qr_code }}
+              resizeMode="cover"
+              className="h-full w-full"
+            />
+            {props.used === true && (
+              <View className="w-[190px] h-[190px]  absolute items-center justify-center">
+                <MaterialIcons name="verified" size={150} color="#009154" />
+              </View>
+            )}
+          </View>
           <View className="border-b border-gray-200 my-4" />
-          <View className="bg-white shadow-lg rounded-lg px-2 py-2">
+          <View className="shadow-lg rounded-lg px-2 py-2">
             <View className="flex-row justify-between">
               <View className="gap-5">
                 <View>
@@ -109,7 +122,7 @@ export default function TicketCard(props: PaidTicketDataTypes) {
                     textStyle="open-sans-bold"
                     style="text-[#000000] text-lg"
                   >
-                    {props.price * props.quantity}
+                    $ {formatCurrency(props.price * props.quantity)}
                   </MyText>
                 </View>
               </View>

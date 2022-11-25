@@ -49,7 +49,7 @@ export default function EventProvider({ children }: { children: ReactNode }) {
   const [searching, setSearching] = useState<boolean>(false);
   const [textState, setTextState] = useState('');
   const [prevPage, setPreviousPage] = useState<string | null>(null);
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(true);
 
   const [location, setLocation] = useState<LocationType>({
     city: null,

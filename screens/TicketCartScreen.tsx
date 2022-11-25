@@ -10,7 +10,7 @@ import React, { useLayoutEffect, useState } from 'react';
 import { RootStackScreenProps } from '../types/types';
 import { Entypo, AntDesign } from '@expo/vector-icons';
 import { MyText } from '../components/AppText';
-import { formatDate } from '../Utils/formatter';
+import { formatCurrency, formatDate } from '../Utils/formatter';
 import axios from 'axios';
 import { serverUrl } from '@env';
 import {
@@ -130,7 +130,7 @@ export default function TicketCartScreen({
                           textStyle="open-sans-semi"
                           style="text-rose-500 text-md px-2 py-1 rounded-lg border-[1px] border-rose-300"
                         >
-                          {price}
+                          $ {formatCurrency(price)}
                         </MyText>
                       </View>
                     </View>
@@ -194,7 +194,7 @@ export default function TicketCartScreen({
             </View>
           </TouchableOpacity>
           <MyText textStyle="open-sans-bold" style="text-white text-lg">
-            {cartTotal}
+            $ {formatCurrency(cartTotal)}
           </MyText>
           <View className="">
             <TouchableOpacity className="bg-rose-500 rounded-lg px-6 py-2">
@@ -236,7 +236,7 @@ export default function TicketCartScreen({
                     {item.eventItem.title}
                   </MyText>
                   <MyText textStyle="open-sans-semi" style="text-white text-sm">
-                    {item.price}
+                    $ {formatCurrency(item.price)}
                   </MyText>
                 </View>
               );
@@ -250,7 +250,7 @@ export default function TicketCartScreen({
                 textStyle="open-sans-semi"
                 style="ml-3 text-white text-lg"
               >
-                {cartTotal}
+                $ {formatCurrency(cartTotal)}
               </MyText>
             </View>
           </View>

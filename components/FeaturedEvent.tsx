@@ -32,6 +32,7 @@ export type useNavigationProps = NativeStackNavigationProp<
 >;
 
 import { serverUrl } from '@env';
+import { formatCurrency } from '../Utils/formatter';
 
 export default function FeaturedEvent() {
   const navigation = useNavigation<useNavigationProps>();
@@ -59,7 +60,7 @@ export default function FeaturedEvent() {
           className="bg-slate-700 px-2 py-1 mr-4 rounded-xl"
           onPress={() => navigation.navigate('CreateEvent', { ...user })}
         >
-          <MyText textStyle="open-sans-bold" style="text-white">
+          <MyText textStyle="open-sans-bold" style="text-white text-lg">
             Create Event
           </MyText>
         </TouchableOpacity>
@@ -106,10 +107,10 @@ export default function FeaturedEvent() {
                 <View className="flex-row items-center justify-between">
                   {data.lowest_price ? (
                     <MyText style="text-gray-500 font-semibold">
-                      ${data.lowest_price}
+                      $ {formatCurrency(data.lowest_price)}
                     </MyText>
                   ) : (
-                    <MyText style="text-gray-500 font-semibold">$0.00</MyText>
+                    <MyText style="text-gray-500 font-semibold">$ 0.00</MyText>
                   )}
                   <TouchableOpacity
                     activeOpacity={0.2}

@@ -15,6 +15,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { useNavigationProps } from './EventCard';
 import { EventDataTypes } from '../types/typings';
 import { MyText } from './AppText';
+import { formatCurrency } from '../Utils/formatter';
 
 export default function Details(props: EventDataTypes) {
   const navigation = useNavigation<useNavigationProps>();
@@ -71,23 +72,6 @@ export default function Details(props: EventDataTypes) {
           >
             {props.title}
           </MyText>
-          <View className="flex-row items-center justify-between">
-            {!props.lowest_price && !props.highest_price ? (
-              <MyText style="text-lg text-[#f94c57] font-bold">$0.00</MyText>
-            ) : props?.lowest_price === props?.highest_price ? (
-              <View>
-                <MyText style="text-xs font-bold text-[#f94c57]">
-                  ${props.lowest_price}
-                </MyText>
-              </View>
-            ) : (
-              <View>
-                <MyText style="text-xs font-bold text-[#f94c57]">
-                  ${props.lowest_price} - {props.highest_price}
-                </MyText>
-              </View>
-            )}
-          </View>
         </Animated.View>
         <Animated.View
           style={[{ opacity }]}
@@ -98,6 +82,26 @@ export default function Details(props: EventDataTypes) {
             <Countdown date={props.date} end_time={props.end_time} />
           </View>
         </Animated.View>
+      </View>
+      <View className="flex-row items-center mt-3 bg-gray-200 px-2 justify-between">
+        {!props.lowest_price && !props.highest_price ? (
+          <MyText textStyle="open-sans-bold" style="text-lg text-[#f94c57]">
+            $0.00
+          </MyText>
+        ) : props?.lowest_price === props?.highest_price ? (
+          <View>
+            <MyText textStyle="open-sans-bold" style="text-lg  text-[#f94c57]">
+              $ {formatCurrency(props.lowest_price)}
+            </MyText>
+          </View>
+        ) : (
+          <View>
+            <MyText textStyle="open-sans-bold" style="text-lg  text-[#f94c57]">
+              $ {formatCurrency(props.lowest_price)} - ${' '}
+              {formatCurrency(props.highest_price)}
+            </MyText>
+          </View>
+        )}
       </View>
       <Animated.View
         style={[{ opacity }]}

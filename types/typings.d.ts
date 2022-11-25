@@ -55,7 +55,7 @@ export interface PaidTicketDataTypes {
   title: StringOrNull;
   ticket: StringOrNull;
   user: StringOrNull;
-  event_admin: string;
+  ticket_admin: string;
   used: boolean;
   quantity: number;
   date: string;
