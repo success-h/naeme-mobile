@@ -35,19 +35,9 @@ export default function EventCard(props: EventDataTypes) {
             className="w-full h-full rounded-2xl"
             source={{ uri: props.image }}
           />
-          <View className="mt-2  items-center p-2 ml-4 absolute shadow-sm shadow-gray-300 bg-white z-30 bottom-3 rounded-xl w-14">
+          <View className="mt-2  items-center p-2 ml-4 absolute shadow-sm shadow-gray-300 bg-white z-30  top-3 right-3 rounded-xl w-14">
             <MyText style="text-[20px] font-bold text-rose-500">{month}</MyText>
             <MyText style="text-[13px] -mt-1 leading-4">{day}</MyText>
-          </View>
-
-          <View className="mt-2  items-center p-2 ml-4 absolute shadow-sm shadow-gray-300 bg-white z-30 top-3 right-3 rounded-xl">
-            <TouchableOpacity className="" activeOpacity={0.2}>
-              {like ? (
-                <Ionicons name="heart" size={27} color="red" />
-              ) : (
-                <Ionicons name="heart-outline" size={27} color="red" />
-              )}
-            </TouchableOpacity>
           </View>
 
           {props.total_sold_tickets === null ? (

@@ -112,18 +112,6 @@ export default function FeaturedEvent() {
                   ) : (
                     <MyText style="text-gray-500 font-semibold">$ 0.00</MyText>
                   )}
-                  <TouchableOpacity
-                    activeOpacity={0.2}
-                    onPress={() => {
-                      setLike(!like);
-                    }}
-                  >
-                    {data.liked === true ? (
-                      <Ionicons name="heart" size={27} color="red" />
-                    ) : (
-                      <Ionicons name="heart-outline" size={27} color="red" />
-                    )}
-                  </TouchableOpacity>
                 </View>
               </View>
             </TouchableOpacity>
