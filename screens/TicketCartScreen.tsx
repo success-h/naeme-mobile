@@ -21,6 +21,7 @@ import {
 import { useCartContext } from '../Providers/CartProvider';
 // @ts-ignore
 import CartImage from '../assets/images/CART.png';
+import Checkout from '../components/Pay';
 
 const Cart = Image.resolveAssetSource(CartImage).uri;
 
@@ -197,9 +198,11 @@ export default function TicketCartScreen({
             $ {formatCurrency(cartTotal)}
           </MyText>
           <View className="">
-            <TouchableOpacity className="bg-rose-500 rounded-lg px-6 py-2">
-              <Text className="text-white ">Checkout</Text>
-            </TouchableOpacity>
+            {cartQuantity > 0 && (
+              <TouchableOpacity className="bg-rose-500 rounded-lg px-6 py-2">
+                <Checkout />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>
@@ -233,7 +236,7 @@ export default function TicketCartScreen({
                     {quantity} x {item.title}
                   </MyText>
                   <MyText textStyle="open-sans-semi" style="text-white text-sm">
-                    {item.eventItem.title}
+                    {item.eventTitle}
                   </MyText>
                   <MyText textStyle="open-sans-semi" style="text-white text-sm">
                     $ {formatCurrency(item.price)}

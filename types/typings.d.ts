@@ -100,7 +100,7 @@ export interface CartItems {
   title: string;
   quantity: number;
   event: string;
-  eventItem: EventDataTypes;
+  eventTitle: string;
 }
 
 interface CartContextTypes {

@@ -15,16 +15,16 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 export type NavigationPrp = NavigationProp<RootStackParamList, 'Detail'>;
 
-export default function TicketCard(props: PaidTicketDataTypes) {
+export default function TicketCard({ item }: { item: PaidTicketDataTypes }) {
   const navigation = useNavigation<NavigationPrp>();
-  const [isVerified, setIsVerified] = useState(props.used);
+  const [isVerified, setIsVerified] = useState(item.used);
 
   console.log({ isVerified });
 
   return (
     <TouchableOpacity
       activeOpacity={0.9}
-      onPress={() => navigation.navigate('MyTicketDetail', { ...props })}
+      onPress={() => navigation.navigate('MyTicketDetail', { ...item })}
     >
       <LinearGradient
         colors={['#eee', '#fff', '#fff']}
@@ -36,7 +36,7 @@ export default function TicketCard(props: PaidTicketDataTypes) {
             textStyle="open-sans-bold"
             style="text-white text-gray-800 text-3xl"
           >
-            {props.event_name}
+            {item.event_name}
           </MyText>
           <View className="flex-row ml-2 mt-3 items-center">
             <View className="flex-row items-center shadow-xl rounded-lg shadow-gray-400 px-3 gap-1 pb-1 bg-[#f23f55]">
@@ -45,7 +45,7 @@ export default function TicketCard(props: PaidTicketDataTypes) {
                 style={{ fontFamily: 'open-sans-semi' }}
                 className="text-[#e8e1e2] text-sm"
               >
-                {props.title}
+                {item.title}
               </Text>
             </View>
           </View>
@@ -53,11 +53,11 @@ export default function TicketCard(props: PaidTicketDataTypes) {
 
           <View className="h-[190px] w-[190px] mx-auto shadow-lg mt-4">
             <Image
-              source={{ uri: props.qr_code }}
+              source={{ uri: item.qr_code }}
               resizeMode="cover"
               className="h-full w-full"
             />
-            {props.used === true && (
+            {item.used === true && (
               <View className="w-[190px] h-[190px]  absolute items-center justify-center">
                 <MaterialIcons name="verified" size={150} color="#009154" />
               </View>
@@ -78,7 +78,7 @@ export default function TicketCard(props: PaidTicketDataTypes) {
                     textStyle="open-sans-bold"
                     style="text-[#000000] text-lg"
                   >
-                    {props.date}
+                    {item.date}
                   </MyText>
                 </View>
                 <View>
@@ -92,7 +92,7 @@ export default function TicketCard(props: PaidTicketDataTypes) {
                     textStyle="open-sans-bold"
                     style="text-[#000000] text-lg"
                   >
-                    {formatTime(props.start_time)}
+                    {formatTime(item.start_time)}
                   </MyText>
                 </View>
               </View>
@@ -108,7 +108,7 @@ export default function TicketCard(props: PaidTicketDataTypes) {
                     textStyle="open-sans-bold"
                     style="text-[#000000] text-lg"
                   >
-                    {props.quantity}
+                    {item.quantity}
                   </MyText>
                 </View>
                 <View>
@@ -122,7 +122,7 @@ export default function TicketCard(props: PaidTicketDataTypes) {
                     textStyle="open-sans-bold"
                     style="text-[#000000] text-lg"
                   >
-                    $ {formatCurrency(props.price * props.quantity)}
+                    $ {formatCurrency(item.price * item.quantity)}
                   </MyText>
                 </View>
               </View>
@@ -130,7 +130,7 @@ export default function TicketCard(props: PaidTicketDataTypes) {
             <View className="border-b border-gray-200 my-4" />
             <View className="flex-row items-center justify-between">
               <Entypo name="time-slot" size={24} color="#282828" />
-              <Countdown date={props.date} end_time={props.end_time} />
+              <Countdown date={item.date} end_time={item.end_time} />
             </View>
           </View>
         </View>

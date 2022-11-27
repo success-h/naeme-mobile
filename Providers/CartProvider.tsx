@@ -43,7 +43,14 @@ export default function CartProvider({ children }: { children: ReactNode }) {
       if (!currItems.find((item) => item.id === id)) {
         return [
           ...currItems,
-          { id, title, event: eventId, price, quantity: 1, eventItem },
+          {
+            id,
+            title,
+            event: eventId,
+            price,
+            quantity: 1,
+            eventTitle: eventItem.title,
+          },
         ];
       } else {
         return currItems.map((item) => {
