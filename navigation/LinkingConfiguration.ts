@@ -17,8 +17,10 @@ const linking: LinkingOptions<RootStackParamList & AuthRootStackParamList> = {
       Detail: 'Detail',
       EditEventModal: 'EditEventModal',
       PaymentModal: 'PaymentModal',
-      NotFound: 'NotFound',
-      SignIn: 'SignIn',
+      CreateEvent: 'CreateEvent',
+      CreateTicket: 'CreateTicket',
+      TicketCart: 'TicketCart',
+      MyTicketDetail: 'MyTicketDetail',
     },
   },
 };

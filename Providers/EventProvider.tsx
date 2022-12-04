@@ -13,9 +13,11 @@ interface EventCartContextType {
   setLoading(value: boolean): void;
   setNextPage: React.Dispatch<React.SetStateAction<string | null>>;
   nextPage: string | null;
-  eventData: EventDataTypes[];
-  setEventData: React.Dispatch<React.SetStateAction<EventDataTypes[]>>;
-  fetchData(url: any): Promise<EventDataTypes[]>;
+  eventData: EventDataTypes[] | undefined;
+  setEventData: React.Dispatch<
+    React.SetStateAction<EventDataTypes[] | undefined>
+  >;
+  fetchData(url: any): Promise<EventDataTypes[] | undefined>;
   loadMoreItem: () => void;
   handleRefresh: () => void;
   refresh: boolean;
@@ -39,17 +41,19 @@ export const EventContext = createContext({} as EventCartContextType);
 
 import { serverUrl } from '@env';
 import { EventDataTypes, ResponseType } from '../types/typings';
+import { useAuthContext } from '../hooks/useAuth';
 
 export default function EventProvider({ children }: { children: ReactNode }) {
   const [featuredEvent, setFeaturedEvent] = useState<EventDataTypes[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [nextPage, setNextPage] = useState<string | null>(null);
-  const [eventData, setEventData] = useState<EventDataTypes[]>([]);
+  const [eventData, setEventData] = useState<EventDataTypes[] | undefined>([]);
   const [refresh, setRefresh] = useState(true);
   const [searching, setSearching] = useState<boolean>(false);
   const [textState, setTextState] = useState('');
   const [prevPage, setPreviousPage] = useState<string | null>(null);
   const [like, setLike] = useState(true);
+  const { user } = useAuthContext();
 
   const [location, setLocation] = useState<LocationType>({
     city: null,
@@ -75,7 +79,7 @@ export default function EventProvider({ children }: { children: ReactNode }) {
       if (nextPage !== prevPage) {
         const response = await fetch(`${nextPage}`);
         const data: ResponseType = await response.json();
-        if (eventData.length < data?.count!) {
+        if (eventData?.length < data?.count!) {
           setEventData([...eventData, ...data?.results]);
         }
         setPreviousPage(data.previous);
@@ -91,44 +95,36 @@ export default function EventProvider({ children }: { children: ReactNode }) {
   const Url = `${serverUrl}/events`;
 
   const fetchData = async (url: any) => {
-    setSearching(false);
-    const response = await fetch(url);
-    const data: ResponseType = await response.json();
-    if (data.next !== null) {
-      setNextPage(data?.next);
+    try {
+      setSearching(false);
+      const response = await fetch(url);
+      const data: ResponseType = await response.json();
+      if (data.next !== null) {
+        setNextPage(data?.next);
+      }
+      setPreviousPage(data.previous);
+      setRefresh(false);
+      setLoading(false);
+
+      return data?.results;
+    } catch (e) {
+      console.log(e);
     }
-    setPreviousPage(data.previous);
-    setRefresh(false);
-    setLoading(false);
-    return data.results;
   };
 
   const handleRefresh = async () => {
     setLoading(true);
-    const data: EventDataTypes[] = await fetchData(Url);
+    const data: EventDataTypes[] | undefined = await fetchData(Url);
     setEventData(data);
     setLoading(false);
-  };
-
-  const fetchIpLocation = () => {
-    fetch('https://ipapi.co/json/')
-      .then((response) => response.json())
-      .then((data) => {
-        setLocation({
-          city: data?.city,
-          country: data?.country_name,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    return data;
   };
 
   useEffect(() => {
-    fetchIpLocation();
+    console.log({ user });
     (async () => {
       setLoading(true);
-      const data: EventDataTypes[] = await fetchData(Url);
+      const data: EventDataTypes[] | undefined = await fetchData(Url);
       setEventData(data);
       setLoading(false);
     })();

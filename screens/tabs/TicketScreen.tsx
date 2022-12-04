@@ -2,34 +2,22 @@ import {
   ActivityIndicator,
   FlatList,
   Platform,
-  Pressable,
   RefreshControl,
   SafeAreaView,
-  Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { MyText } from '../../components/AppText';
-import {
-  RootStackParamList,
-  RootStackScreenProps,
-  RootTabScreenProps,
-  TabScreenProps,
-} from '../../types/types';
+import { TabScreenProps } from '../../types/types';
 
 import { serverUrl } from '@env';
 import axios from 'axios';
 import { useAuthContext } from '../../hooks/useAuth';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  EventDataTypes,
-  ResponseType,
   PaidTicketDataTypes,
   PaidTicketResponseType,
   StringOrNull,
 } from '../../types/typings';
-import { MyEventLoaderScreen } from '../../components/Loader';
-import { useEventContext } from '../../hooks/useEvent';
 import TicketCard from '../../components/TicketCard';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -47,7 +35,7 @@ export default function TicketScreen({
 
   const handleRefresh = async () => {
     setLoading(true);
-    const data = await fetchTickets(user?.id);
+    const data = await fetchTickets(user.id);
     setTickets(data);
     setLoading(false);
   };
@@ -62,15 +50,19 @@ export default function TicketScreen({
   console.log('focus0', isFocused);
 
   useEffect(() => {
+    try {
+      (async () => {
+        setLoading(true);
+        const data = await fetchTickets(user?.id);
+        setTickets(data);
+        console.log(data);
+        setRefresh(false);
+        setLoading(false);
+      })();
+    } catch (e) {
+      e;
+    }
     setRefresh(false);
-    (async () => {
-      setLoading(true);
-      const data = await fetchTickets(user?.id);
-      setTickets(data);
-      console.log(data);
-      setRefresh(false);
-      setLoading(false);
-    })();
   }, [isFocused]);
 
   return (

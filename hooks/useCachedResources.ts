@@ -3,6 +3,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { serverUrl } from '@env';
 
 type Fonts = {
   'open-sans-bold': string;
@@ -18,54 +19,80 @@ export interface TokensType {
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 
-  const url = 'https://naeme-api.herokuapp.com/api/token/refresh/';
+  const url = `${serverUrl}/token/verify/`;
   const checkLoginCredentials = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('naemeUser');
-      const tokens: TokensType =
-        jsonValue != null ? JSON.parse(jsonValue) : null;
+    const jsonValue = await AsyncStorage.getItem('naemeUser');
+    const tokens: TokensType = jsonValue != null ? JSON.parse(jsonValue) : null;
 
-      if (tokens.access) {
-        axios
-          .post(url, {
-            refresh: tokens.refresh,
-          })
-          .then((response) => {
-            const jsonValue = JSON.stringify(response.data);
-            AsyncStorage.setItem('naemeUser', jsonValue)
-              .then(() => {})
-              .catch((e) => console.log(e));
-            return response.data;
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-    } catch (e) {
-      // error reading value
+    if (tokens) {
+      axios
+        .post(url, {
+          token: tokens.access,
+        })
+        .then((response) => {
+          console.log(response.status);
+          const jsonValue = JSON.stringify(response.data);
+          if (response.status === 200) {
+            return;
+          } else {
+            axios
+              .post(`${serverUrl}/token/refresh/`, {
+                refresh: tokens.refresh,
+              })
+              .then((response) => {
+                if (response.status === 200) {
+                  const jsonValue = JSON.stringify(response.data);
+                  AsyncStorage.setItem('naemeUser', jsonValue)
+                    .then((r) => {
+                      r;
+                    })
+                    .catch((e) => {
+                      throw e;
+                    });
+                }
+                return;
+              })
+              .catch((error) => {
+                console.log(error);
+                return error;
+              });
+          }
+          // AsyncStorage.setItem('naemeUser', jsonValue)
+          //   .then((r) => {
+          //     r;
+          //   })
+          //   .catch((e) => {
+          //     throw e;
+          //   });
+          return;
+        })
+        .catch((error) => {
+          console.log(error);
+          return error;
+        });
     }
+
+    return null;
   };
 
   useEffect(() => {
-    async function loadResourcesAndDataAsync() {
+    (async () => {
       try {
         SplashScreen.preventAutoHideAsync();
         await checkLoginCredentials();
         await Font.loadAsync({
-          'open-sans-bold': require('../assets/fonts/OpenSans-Bold.ttf'),
           'open-sans-medium': require('../assets/fonts/OpenSans-Medium.ttf'),
+          'open-sans-bold': require('../assets/fonts/OpenSans-Bold.ttf'),
           'open-sans-regular': require('../assets/fonts/OpenSans-Regular.ttf'),
           'open-sans-semi': require('../assets/fonts/OpenSans-SemiBold.ttf'),
         });
       } catch (e) {
-        // We might want to provide this error information to an error reporting service
+        throw e;
       } finally {
         setLoadingComplete(true);
         SplashScreen.hideAsync();
       }
-    }
-
-    loadResourcesAndDataAsync();
+    })();
   }, []);
 
   return { isLoadingComplete };

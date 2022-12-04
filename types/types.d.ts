@@ -27,14 +27,13 @@ export type RootTabParamList = {
 
 export type RootStackParamList = {
   Main: NavigatorScreenParams<RootTabParamList> | undefined;
+  Detail: EventDataTypes;
   EditEventModal: EventDataTypes;
   PaymentModal: undefined;
-  Detail: EventDataTypes;
   CreateEvent: User;
   CreateTicket: undefined;
   TicketCart: EventDataTypes;
   MyTicketDetail: PaidTicketDataTypes;
-  NotFound: undefined;
 };
 
 export type AuthStackScreenProps<Screen extends keyof AuthRootStackParamList> =

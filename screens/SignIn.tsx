@@ -1,14 +1,20 @@
-import { Image, Platform, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  Platform,
+  SafeAreaView,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { MyText } from '../components/AppText';
 import { useAuthContext } from '../hooks/useAuth';
 
 export default function SignIn({}) {
-  const { loading, login, logout, user, setLoading, googleAuth } =
-    useAuthContext();
+  const { googleAuth } = useAuthContext();
 
   return (
-    <View className="bg-white w-full flex-1 justify-center items-center">
-      <View className="-mt-32 mb-6">
+    <SafeAreaView className="bg-white h-full w-full items-center">
+      <View className="mt-[17%]">
         <MyText textStyle="open-sans-bold" style="text-3xl text-center">
           Book Your Tickets
         </MyText>
@@ -18,8 +24,14 @@ export default function SignIn({}) {
         >
           Seamlessly.
         </MyText>
+        <MyText
+          textStyle="open-sans-medium"
+          style="text-sm leading-5 text-gray-600 px-10 text-center text"
+        >
+          Discover amazing events happening around you!
+        </MyText>
       </View>
-      <View className="w-[350px] z-10 h-[350px]">
+      <View className="w-[70%] z-10 h-[40%] mt-[10%]">
         <Image
           source={{
             uri: 'https://res.cloudinary.com/dp3a4be7p/image/upload/v1667131028/homes_fl8y0e.png',
@@ -28,35 +40,27 @@ export default function SignIn({}) {
           resizeMode="contain"
         />
       </View>
-      <View className="h-80 bg-slate-200 rounded-full -mt-80 w-80" />
-      <MyText
-        textStyle="open-sans-medium"
-        style="text-lg leading-5 px-10 text-center text mt-4"
-      >
-        Discover amazing events happening around you!
-      </MyText>
-      <View className="items-center absolute bottom-0 mb-28">
+      <View className="items-center mt-[3%] bottom-0">
         <MyText
           textStyle="open-sans-bold"
           style="text-sm px-7 mb-3 text-gray-700 mt-1 text-center text"
         >
           lets get you started with your account
         </MyText>
-        <View className="flex-row gap-10 items-start justify-between">
+        <View className="flex-row gap-10 mt-[-3%] items-start justify-between">
           <TouchableOpacity
             onPress={() => googleAuth()}
-            className="px-4 py-2 bg-slate-100 rounded-md"
+            className="px-4 py-2 bg-[#000] rounded-md"
           >
-            <Image
-              source={{
-                uri: 'https://res.cloudinary.com/dp3a4be7p/image/upload/v1667132554/google_logo_oedjai.png',
-              }}
-              className="h-[24px] w-[24px]"
-              resizeMode="contain"
-            />
+            <MyText
+              textStyle="open-sans-bold"
+              style="text-sm px-7 mb-3 text-gray-100 mt-1 text-center text"
+            >
+              Continue with google
+            </MyText>
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

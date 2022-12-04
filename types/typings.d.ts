@@ -69,7 +69,7 @@ export type ResponseType = {
   count: number | null;
   next: StringOrNull;
   previous: StringOrNull;
-  results: EventDataTypes[];
+  results: EventDataTypes[] | undefined;
 };
 
 export type PaidTicketResponseType = {
@@ -86,12 +86,12 @@ export type User = {
   email: StringOrNull;
   image: string | undefined;
   tokens: {
-    refresh: StringOrNull;
-    access: StringOrNull;
+    refresh: string | null;
+    access: string | null;
   };
   auth_provider: StringOrNull;
   id: StringOrNull;
-};
+} | null;
 
 export interface CartItems {
   id: number;

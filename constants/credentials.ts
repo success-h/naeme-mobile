@@ -8,5 +8,5 @@ export const androidGoogleCliendId =
   '919602408222-63uj948lf5qtj1vos519rfdr5v1osnc8.apps.googleusercontent.com';
 
 export const endpoints = {
-  google: serverUrl + '/account/google/',
+  google: `${serverUrl}/account/google/`,
 };

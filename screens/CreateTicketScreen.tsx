@@ -86,7 +86,7 @@ export default function CreateTicketScreen({
     formData.append('title', data.title);
     formData.append('quantity', Number(data.quantity));
     formData.append('event', eventId);
-    formData.append('owner', user.id);
+    formData.append('owner', user?.id);
 
     const url = `${serverUrl}/tickets/`;
     const requestOptions = {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { endpoints } from '../constants/credentials';
-import { User } from '../typings';
+import { User } from '../types/typings';
 
 type DataRes = { data: User };
 

@@ -15,10 +15,9 @@ interface TokensType {
 
 const Navigation = () => {
   const { isLoadingComplete } = useCachedResources();
-  const { loading, setLoading, user, login, setUser } = useAuthContext();
+  const { loading, user } = useAuthContext();
 
   if (loading) {
-    console.log(loading);
     return (
       <SafeAreaProvider>
         <SplashScreen />
@@ -29,7 +28,7 @@ const Navigation = () => {
   if (!loading && isLoadingComplete) {
     return (
       <NavigationContainer linking={LinkingConfiguration}>
-        {user.email ? <HomeNavigator /> : <AuthNavigator />}
+        {user?.email ? <HomeNavigator /> : <AuthNavigator />}
       </NavigationContainer>
     );
   }
