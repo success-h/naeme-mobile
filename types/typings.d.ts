@@ -82,7 +82,7 @@ export type PaidTicketResponseType = {
 export type StringOrNull = string | null;
 
 export type User = {
-  username: StringOrNull;
+  name: StringOrNull;
   email: StringOrNull;
   image: string | undefined;
   tokens: {

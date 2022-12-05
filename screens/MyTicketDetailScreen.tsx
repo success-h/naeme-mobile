@@ -1,4 +1,11 @@
-import { View, Text, Platform, TouchableOpacity, Image } from 'react-native';
+import {
+  View,
+  Text,
+  Platform,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from 'react-native';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { RootStackScreenProps } from '../types/types';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -30,22 +37,30 @@ export default function MyTicketDetailScreen({
     const formData = new FormData();
     formData.append('used', true);
     setLoading(true);
-    if (user.id === data.ticket_admin) {
-      const response = await axios.patch(
-        `${serverUrl}/my-tickets/${data.id}/`,
-        formData,
-        {
-          headers: {
-            Accept: 'application/json',
-            Authorization: `Bearer ${tokens?.access}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        setLoading(false);
-        setIsVerified(response.data.used);
+    if (tokens.access && data?.id) {
+      if (user?.id === data.ticket_admin) {
+        axios
+          .patch(
+            `${serverUrl}/my-tickets/${data?.id}/`,
+            { used: true },
+            {
+              headers: {
+                Accept: 'application/json',
+                Authorization: `Bearer ${tokens?.access}`,
+              },
+            }
+          )
+          .then((response) => {
+            if (response.status === 200) {
+              setIsVerified(response.data.used);
+              setLoading(false);
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+            setLoading(false);
+          });
       }
-      setLoading(false);
     }
   };
 
@@ -60,7 +75,7 @@ export default function MyTicketDetailScreen({
       >
         <AntDesign name="arrowleft" size={20} color="#181818" />
       </TouchableOpacity>
-      <View className="bordermx-4 rounded-3xl">
+      <ScrollView className="bordermx-4 rounded-3xl w-full px-[7%]">
         <View className="h-full w-full py-7 mt-[50%] px-4">
           <MyText
             textStyle="open-sans-bold"
@@ -69,7 +84,7 @@ export default function MyTicketDetailScreen({
             {data.event_name}
           </MyText>
           <View className="flex-row ml-2 mt-3 items-center">
-            <View className="flex-row items-center shadow-xl rounded-lg shadow-gray-400 px-3 gap-1 pb-1 bg-[#f23f55]">
+            <View className="flex-row items-center shadow-xl rounded-lg px-3 gap-1 pb-1 bg-[#f23f55]">
               <FontAwesome name="ticket" size={17} color="#e8e1e2" />
               <Text
                 style={{ fontFamily: 'open-sans-semi' }}
@@ -165,7 +180,7 @@ export default function MyTicketDetailScreen({
               <Countdown date={data.date} end_time={data.end_time} />
             </View>
           </View>
-          {user.id === data.ticket_admin && (
+          {user?.id === data.ticket_admin && (
             <TouchableOpacity
               onPress={verifyTicket}
               className="bg-rose-500 mx-2 mt-2 rounded-xl"
@@ -183,7 +198,7 @@ export default function MyTicketDetailScreen({
             </TouchableOpacity>
           )}
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }

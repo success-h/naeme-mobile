@@ -1,3 +1,4 @@
+import { serverUrl } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -39,8 +40,7 @@ export default function UserScreen({
   const [logoutLoading, setlogoutLoading] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const Url = `https://naeme-api.herokuapp.com/api/events/?owner=${user.id}`;
-
+  const Url = `${serverUrl}/events/?owner=${user?.id}`;
   useLayoutEffect(() => {
     (async () => {
       const events: EventDataTypes[] = await fetchData(Url);
@@ -58,9 +58,7 @@ export default function UserScreen({
       >
         <View>
           <Text className="text-md font-bold text-[#a9a9a9]">Hello</Text>
-          <Text className="text-xl font-bold text-[#faf8f8]">
-            {user.username}
-          </Text>
+          <Text className="text-xl font-bold text-[#faf8f8]">{user?.name}</Text>
           <TouchableOpacity
             onPress={() => {
               setlogoutLoading(true);

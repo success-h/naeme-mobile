@@ -36,7 +36,7 @@ interface AuthProviderProps {
 export const AuthContext = createContext({} as AuthProviderProps);
 
 export const defaultUser = {
-  username: null,
+  name: null,
   email: null,
   image: undefined,
   auth_provider: null,
@@ -44,18 +44,6 @@ export const defaultUser = {
   tokens: {
     access: null,
     refresh: null,
-  },
-};
-
-const dummyUser: User = {
-  email: 'succes@test.com',
-  username: 'SUCCESS HYCENTH',
-  image: '',
-  auth_provider: 'google',
-  id: 'uwebuob',
-  tokens: {
-    access: "qpvob'grf",
-    refresh: "naeouho';e'b",
   },
 };
 

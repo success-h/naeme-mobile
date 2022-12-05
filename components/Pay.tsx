@@ -25,7 +25,7 @@ export default function Checkout() {
         style={{ flex: 1 }}
         paystackKey={paymentKey}
         amount={cartTotal}
-        billingEmail={user.email}
+        billingEmail={user?.email}
         activityIndicatorColor="green"
         //@ts-ignore
         onCancel={(e) => {
@@ -48,7 +48,7 @@ export default function Checkout() {
                 body: JSON.stringify({
                   event: item.event,
                   ticket: item.id,
-                  user: user.id,
+                  user: user?.id,
                   quantity: item.quantity,
                   transactionId: data.transactionRef.transaction,
                 }),

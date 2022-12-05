@@ -168,7 +168,7 @@ export default function CreateEventScreen({
     formData.append('end_time', end_time);
     formData.append('website', data?.website);
     formData.append('owner', user?.id);
-    formData.append('organizer', user?.username);
+    formData.append('organizer', user?.name);
 
     const url = `${serverUrl}/events/`;
     const requestOptions = {

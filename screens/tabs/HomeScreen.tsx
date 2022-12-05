@@ -42,7 +42,7 @@ const HomeScreen = ({ navigation, route }: TabScreenProps<'Home'>) => {
     <View>
       <StatusBar
         style={Platform.OS === 'ios' ? 'light' : 'light'}
-        backgroundColor="#000"
+        // backgroundColor="#000"
       />
       <HomeHeader />
       <FlatList

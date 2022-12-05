@@ -14,7 +14,7 @@ import { useAuthContext } from '../hooks/useAuth';
 import { MyText } from '../components/AppText';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export const BANNER_H = 420;
+export const BANNER_H = 400;
 export const TOPNAVI_H = 0;
 
 export default function DetailScreen({
@@ -22,15 +22,10 @@ export default function DetailScreen({
   route,
 }: RootStackScreenProps<'Detail'>) {
   const scrollA = useRef(new Animated.Value(0)).current;
-  const { user } = useAuthContext();
 
   const data = route.params;
   return (
-    <LinearGradient
-      colors={['#ffffff', '#eeeeee']}
-      start={{ x: 0.9, y: 0.4 }}
-      className="flex-1"
-    >
+    <View className="flex-1">
       <View className="w-full absolute bottom-0 py-4 mb-2 items-center z-10">
         <TouchableOpacity
           onPress={() => navigation.navigate('TicketCart', { ...data })}
@@ -38,11 +33,11 @@ export default function DetailScreen({
         >
           <MyText
             textStyle="open-sans-bold"
-            style="text-[#f94c57] text-md mr-2"
+            style="text-[#f94c57] text-xs mr-1"
           >
             Book Now
           </MyText>
-          <FontAwesome name="ticket" size={16} color="#f94c57" />
+          <FontAwesome name="ticket" size={12} color="#f94c57" />
         </TouchableOpacity>
       </View>
       <Animated.ScrollView
@@ -63,8 +58,6 @@ export default function DetailScreen({
         </View>
 
         <Details {...data} />
-
-        <View className="" />
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           className={` ${
@@ -78,7 +71,7 @@ export default function DetailScreen({
           )}
         </TouchableOpacity>
       </Animated.ScrollView>
-    </LinearGradient>
+    </View>
   );
 }
 

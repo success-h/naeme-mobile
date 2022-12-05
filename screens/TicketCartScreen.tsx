@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
+  ScrollView,
 } from 'react-native';
 import React, { useLayoutEffect, useState } from 'react';
 import { RootStackScreenProps } from '../types/types';
@@ -22,6 +23,7 @@ import { useCartContext } from '../Providers/CartProvider';
 // @ts-ignore
 import CartImage from '../assets/images/CART.png';
 import Checkout from '../components/Pay';
+import { StatusBar } from 'expo-status-bar';
 
 const Cart = Image.resolveAssetSource(CartImage).uri;
 
@@ -70,9 +72,13 @@ export default function TicketCartScreen({
 
   return (
     <View className="flex-1">
-      <View
-        className={`h-full bg-white ${
-          Platform.OS === 'android' ? 'pt-[20%]' : 'pt-[16%]'
+      <StatusBar
+        style={Platform.OS === 'ios' ? 'light' : 'light'}
+        backgroundColor="#000"
+      />
+      <ScrollView
+        className={`h-full ${
+          Platform.OS === 'android' ? 'pt-[17%]' : 'pt-[16%]'
         }`}
       >
         <View className="z-20">
@@ -183,7 +189,7 @@ export default function TicketCartScreen({
             })}
           </View>
         )}
-      </View>
+      </ScrollView>
       <View className="absolute z-40 bottom-0 px-5 right-0 rounded-t-3xl flex-row left-0 bg-[#0f0f0f] h-[11%]">
         <View className="flex-1 flex-row justify-between items-center">
           <TouchableOpacity onPress={toggleOrderSummary}>

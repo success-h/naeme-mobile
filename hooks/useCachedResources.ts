@@ -33,6 +33,7 @@ export default function useCachedResources() {
           console.log(response.status);
           const jsonValue = JSON.stringify(response.data);
           if (response.status === 200) {
+            console.log({ jsonValue });
             return;
           } else {
             axios
@@ -57,13 +58,7 @@ export default function useCachedResources() {
                 return error;
               });
           }
-          // AsyncStorage.setItem('naemeUser', jsonValue)
-          //   .then((r) => {
-          //     r;
-          //   })
-          //   .catch((e) => {
-          //     throw e;
-          //   });
+
           return;
         })
         .catch((error) => {

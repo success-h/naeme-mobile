@@ -47,15 +47,12 @@ export default function TicketScreen({
     return data?.results;
   };
 
-  console.log('focus0', isFocused);
-
   useEffect(() => {
     try {
       (async () => {
         setLoading(true);
         const data = await fetchTickets(user?.id);
         setTickets(data);
-        console.log(data);
         setRefresh(false);
         setLoading(false);
       })();
@@ -67,14 +64,19 @@ export default function TicketScreen({
 
   return (
     <SafeAreaView className="bg-[#010001] flex-1 w-full">
-      <View className={`px-4 ${Platform.OS === 'android' ? 'mt-4' : ''}`}>
-        <MyText textStyle="open-sans-bold" style="text-gray-100 mt-10 text-2xl">
+      <View
+        className={`px-4 ${Platform.OS === 'android' ? 'mt-[5%]' : 'mt-[10%]'}`}
+      >
+        <MyText
+          textStyle="open-sans-bold"
+          style="text-gray-100 mt-[9%] text-2xl"
+        >
           My Tickets
         </MyText>
         {tickets.length > 1 && (
           <MyText
             textStyle="open-sans-bold"
-            style="text-gray-100 text-start justify-center mt-4 text-sm"
+            style="text-gray-100 text-start justify-center my-5 text-sm"
           >
             Swipe right to see tickets
           </MyText>
