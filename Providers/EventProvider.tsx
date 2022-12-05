@@ -79,8 +79,8 @@ export default function EventProvider({ children }: { children: ReactNode }) {
       if (nextPage !== prevPage) {
         const response = await fetch(`${nextPage}`);
         const data: ResponseType = await response.json();
-        if (eventData?.length < data?.count!) {
-          setEventData([...eventData, ...data?.results]);
+        if (eventData?.length! < data?.count!) {
+          setEventData([...eventData!, ...data?.results]);
         }
         setPreviousPage(data.previous);
         setNextPage(data?.next);
@@ -105,7 +105,6 @@ export default function EventProvider({ children }: { children: ReactNode }) {
       setPreviousPage(data.previous);
       setRefresh(false);
       setLoading(false);
-
       return data?.results;
     } catch (e) {
       console.log(e);
@@ -121,16 +120,14 @@ export default function EventProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    console.log({ user });
+    setLoading(true);
     (async () => {
-      setLoading(true);
       const data: EventDataTypes[] | undefined = await fetchData(Url);
       setEventData(data);
       setLoading(false);
     })();
   }, []);
 
-  useEffect(() => {}, []);
   return (
     <EventContext.Provider
       value={{

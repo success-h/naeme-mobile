@@ -14,6 +14,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useAuthContext } from '../hooks/useAuth';
 import { RootTabParamList } from '../types/types';
 import { MyText } from './AppText';
+import { serverUrl } from '@env';
 
 type NavProps = NavigationProp<RootTabParamList, 'Home'>;
 
@@ -36,9 +37,7 @@ export default function Search() {
   const searchData = async (text: string) => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `https://naeme-api.herokuapp.com/api/events/?title=${text}`
-      );
+      const response = await fetch(`${serverUrl}/events/?title=${text}`);
       const data = await response.json();
       setLoading(false);
       return data?.results;
@@ -68,7 +67,7 @@ export default function Search() {
             className="w-[45px] h-[45px] text-[#fd6e6e] "
           >
             <Image
-              source={{ uri: user.image }}
+              source={{ uri: user?.image }}
               className="w-full h-full rounded-full border-[#ffffff] border"
               resizeMode="contain"
             />

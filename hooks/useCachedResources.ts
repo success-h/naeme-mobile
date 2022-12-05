@@ -31,9 +31,7 @@ export default function useCachedResources() {
         })
         .then((response) => {
           console.log(response.status);
-          const jsonValue = JSON.stringify(response.data);
           if (response.status === 200) {
-            console.log({ jsonValue });
             return;
           } else {
             axios
@@ -54,7 +52,6 @@ export default function useCachedResources() {
                 return;
               })
               .catch((error) => {
-                console.log(error);
                 return error;
               });
           }

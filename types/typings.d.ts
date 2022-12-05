@@ -69,7 +69,7 @@ export type ResponseType = {
   count: number | null;
   next: StringOrNull;
   previous: StringOrNull;
-  results: EventDataTypes[] | undefined;
+  results: EventDataTypes[];
 };
 
 export type PaidTicketResponseType = {
