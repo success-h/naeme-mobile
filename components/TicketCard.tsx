@@ -26,8 +26,8 @@ export default function TicketCard({ item }: { item: PaidTicketDataTypes }) {
       activeOpacity={0.9}
       onPress={() => navigation.navigate('MyTicketDetail', { ...item })}
     >
-      <View className="h-[85%] bg-white mb-7 w-[315px] mx-4 rounded-3xl">
-        <View className="h-full w-full py-7 px-4">
+      <View className="bg-white mb-7 w-[315px] mx-4 rounded-3xl">
+        <View className="w-full py-7 px-4">
           <MyText
             textStyle="open-sans-bold"
             style="text-white text-gray-800 text-2xl"

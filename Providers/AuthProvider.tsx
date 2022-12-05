@@ -22,7 +22,6 @@ import { User } from '../types/typings';
 interface AuthProviderProps {
   user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;
-  login: () => void;
   logout: () => void;
   loading: boolean;
   setLoading(loading: boolean): void;
@@ -133,7 +132,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
-        login: () => setUser(dummyUser),
         logout: () => {
           setUser(defaultUser);
         },

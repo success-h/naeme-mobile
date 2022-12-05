@@ -75,7 +75,7 @@ export default function MyTicketDetailScreen({
       >
         <AntDesign name="arrowleft" size={20} color="#181818" />
       </TouchableOpacity>
-      <ScrollView className="bordermx-4 rounded-3xl w-full px-[7%]">
+      <ScrollView className="mx-4 bg-white rounded-3xl w-full px-[7%]">
         <View className="h-full w-full py-7 mt-[50%] px-4">
           <MyText
             textStyle="open-sans-bold"
@@ -84,7 +84,7 @@ export default function MyTicketDetailScreen({
             {data.event_name}
           </MyText>
           <View className="flex-row ml-2 mt-3 items-center">
-            <View className="flex-row items-center shadow-xl rounded-lg px-3 gap-1 pb-1 bg-[#f23f55]">
+            <View className="flex-row items-center rounded-lg px-3 gap-1 pb-1 bg-[#f23f55]">
               <FontAwesome name="ticket" size={17} color="#e8e1e2" />
               <Text
                 style={{ fontFamily: 'open-sans-semi' }}
@@ -95,7 +95,7 @@ export default function MyTicketDetailScreen({
             </View>
           </View>
           <View className="border-b border-gray-200 my-4" />
-          <View className="h-[220px] w-[220px] mx-auto shadow-lg mt-4">
+          <View className="h-[240px] w-[270px] mx-auto shadow-lg mt-4">
             <Image
               source={{ uri: data.qr_code }}
               resizeMode="cover"
@@ -103,7 +103,7 @@ export default function MyTicketDetailScreen({
             />
 
             {isVerified && (
-              <View className="w-[220px] h-[220px] items-center justify-center absolute">
+              <View className="w-[270px] h-[240px] items-center justify-center absolute">
                 <MaterialIcons name="verified" size={180} color="#009154" />
               </View>
             )}

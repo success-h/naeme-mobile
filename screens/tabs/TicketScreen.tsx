@@ -35,7 +35,7 @@ export default function TicketScreen({
 
   const handleRefresh = async () => {
     setLoading(true);
-    const data = await fetchTickets(user.id);
+    const data = await fetchTickets(user?.id);
     setTickets(data);
     setLoading(false);
   };
