@@ -94,7 +94,7 @@ export type User = {
 } | null;
 
 export interface CartItems {
-  id: number;
+  id: string;
   price: number;
   //   lowest_price: number;
   title: string;
@@ -113,19 +113,19 @@ interface CartContextTypes {
   cartQuantity: number;
   cartTotal: number;
   toggleOrderSummary: () => void;
-  getItemQuantity(id: number): number;
+  getItemQuantity(id: string): number;
   increaseCartQuantity(
-    id: number,
+    id: string,
     price: number,
     title: string,
-    event: string,
+    eventId: string,
     eventItem: EventDataTypes
   ): void;
-  decreaseCartQuantity(id: number): void;
+  decreaseCartQuantity(id: string): void;
 }
 
 interface TicketDataTypes {
-  id: number;
+  id: string;
   price: number;
   lowest_price: number;
   highest_price: number;

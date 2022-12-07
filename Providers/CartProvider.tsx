@@ -24,14 +24,14 @@ export default function CartProvider({ children }: { children: ReactNode }) {
 
   const toggleOrderSummary = () => setOrderSummaryToggle(!orderSummaryToggle);
 
-  const getItemQuantity = (id: number) => {
+  const getItemQuantity = (id: string) => {
     const qty = cartItems.find((item) => item.id === id)?.quantity || 0;
     console.log(qty);
     return qty;
   };
 
   function increaseCartQuantity(
-    id: number,
+    id: string,
     price: number,
     title: string,
     eventId: string,
@@ -64,7 +64,7 @@ export default function CartProvider({ children }: { children: ReactNode }) {
     });
   }
 
-  function decreaseCartQuantity(id: number) {
+  function decreaseCartQuantity(id: string) {
     setCartItems((currItems) => {
       if (currItems.find((item) => item.id === id)?.quantity === 1) {
         return currItems.filter((item) => item.id !== id);
